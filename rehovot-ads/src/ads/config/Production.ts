@@ -1,20 +1,13 @@
-// Production configuration is wired for Unity and disables test mode.
-import type { AdsConfig } from "./AdsConfig";
+import { DEFAULT_ADS_CONFIG, type AdsServiceConfig } from "./AdsConfig";
 
-export const ProductionAdsConfig = {
-  provider: "unity",
-  testMode: false,
+export const ProductionAdsConfig: AdsServiceConfig = {
+  ...DEFAULT_ADS_CONFIG,
   debug: false,
-  android: {
-    gameId: "android-prod-game-id",
-    banner: "android-prod-banner-id",
-    interstitial: "android-prod-interstitial-id",
-    rewarded: "android-prod-rewarded-id",
+  testMode: false,
+  appKey: "TODO_REPLACE_WITH_PRODUCTION_APP_KEY",
+  placements: {
+    banner: "TODO_PROD_BANNER_PLACEMENT",
+    interstitial: "TODO_PROD_INTERSTITIAL_PLACEMENT",
+    rewarded: "TODO_PROD_REWARDED_PLACEMENT",
   },
-  ios: {
-    gameId: "ios-prod-game-id",
-    banner: "ios-prod-banner-id",
-    interstitial: "ios-prod-interstitial-id",
-    rewarded: "ios-prod-rewarded-id",
-  },
-} satisfies AdsConfig;
+};

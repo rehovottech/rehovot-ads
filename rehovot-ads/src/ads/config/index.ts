@@ -1,4 +1,10 @@
-// Central re-export for configuration types and presets.
-export type { AdsConfig, AdsPlatformConfig, AdsProviderName } from "./AdsConfig";
+export {
+  DEFAULT_ADS_CONFIG,
+  type AdsBridgeName,
+  type AdsFrequencyCapConfig,
+  type AdsPlacementIds,
+  type AdsPrivacyConfig,
+  type AdsServiceConfig,
+} from "./AdsConfig";
 export { DevelopmentAdsConfig } from "./Development";
 export { ProductionAdsConfig } from "./Production";

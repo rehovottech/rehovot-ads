@@ -8,7 +8,7 @@ def minSdkVersionValue = rootProject.ext.has('minSdkVersion') ? rootProject.ext.
 def targetSdkVersionValue = rootProject.ext.has('targetSdkVersion') ? rootProject.ext.targetSdkVersion : 34
 
 android {
-    namespace "com.rehovottech.levelplay"
+    namespace "com.rehovottech.capacitorads"
     compileSdk compileSdkVersionValue
 
     defaultConfig {

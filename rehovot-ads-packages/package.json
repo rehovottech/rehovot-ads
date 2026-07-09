@@ -1,18 +1,18 @@
 {
-  "name": "@rehovottech/capacitor-unity-levelplay",
+  "name": "@rehovottech/capacitor-ads",
   "version": "0.1.0",
-  "description": "Production-quality Capacitor v7 plugin scaffold for Unity LevelPlay and future ad providers.",
+  "description": "Reusable Capacitor ad bridge for native SDK backends.",
   "type": "module",
-  "main": "dist/plugin.cjs.js",
-  "module": "dist/plugin.js",
-  "types": "dist/types/index.d.ts",
+  "main": "src/index.ts",
+  "module": "src/index.ts",
+  "types": "src/index.ts",
   "files": [
     "android",
     "ios",
     "src",
     "dist",
     "README.md",
-    "CapacitorUnityLevelPlay.podspec"
+    "CapacitorAds.podspec"
   ],
   "scripts": {
     "build": "rollup -c rollup.config.mjs && tsc -p tsconfig.json --emitDeclarationOnly --declarationDir dist/types",
@@ -20,10 +20,10 @@
     "lint": "tsc -p tsconfig.json --noEmit"
   },
   "peerDependencies": {
-    "@capacitor/core": "^7.0.0"
+    "@capacitor/core": "^8.0.0"
   },
   "devDependencies": {
-    "@capacitor/core": "^7.0.0",
+    "@capacitor/core": "^8.4.1",
     "@rollup/plugin-typescript": "^12.1.4",
     "rollup": "^4.34.0",
     "typescript": "^5.9.0"
@@ -31,9 +31,9 @@
   "keywords": [
     "capacitor",
     "ionic",
-    "react",
     "ads",
-    "unity",
+    "bridge",
+    "mediation",
     "levelplay"
   ],
   "license": "MIT"

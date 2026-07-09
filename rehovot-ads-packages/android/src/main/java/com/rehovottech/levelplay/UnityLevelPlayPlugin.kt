@@ -1,4 +1,4 @@
-package com.rehovottech.levelplay
+package com.rehovottech.capacitorads
 
 import com.getcapacitor.JSObject
 import com.getcapacitor.Plugin
@@ -6,51 +6,45 @@ import com.getcapacitor.PluginCall
 import com.getcapacitor.PluginMethod
 import com.getcapacitor.annotation.CapacitorPlugin
 
-// Capacitor bridge only; all native logic lives in UnityLevelPlay and its managers.
-@CapacitorPlugin(name = "UnityLevelPlay")
-class UnityLevelPlayPlugin : Plugin() {
-    private lateinit var unityLevelPlay: UnityLevelPlay
+// Capacitor bridge only; all native behavior stays behind CapacitorAds.
+@CapacitorPlugin(name = "CapacitorAds")
+class CapacitorAdsPlugin : Plugin() {
+    private lateinit var capacitorAds: CapacitorAds
 
     override fun load() {
-        unityLevelPlay = UnityLevelPlay(Logger("UnityLevelPlay", false))
+        capacitorAds = CapacitorAds(Logger("CapacitorAds", false))
     }
 
     @PluginMethod
     public fun initialize(call: PluginCall) {
-        unityLevelPlay.initialize(call.toInitializeRequest())
+        capacitorAds.initialize(call.toInitializeRequest())
         call.resolve()
     }
 
     @PluginMethod
     public fun showBanner(call: PluginCall) {
-        unityLevelPlay.showBanner(call.toBannerRequest())
+        capacitorAds.showBanner(call.toBannerRequest())
         call.resolve()
     }
 
     @PluginMethod
     public fun hideBanner(call: PluginCall) {
-        unityLevelPlay.hideBanner()
-        call.resolve()
-    }
-
-    @PluginMethod
-    public fun destroyBanner(call: PluginCall) {
-        unityLevelPlay.destroyBanner()
+        capacitorAds.hideBanner()
         call.resolve()
     }
 
     @PluginMethod
     public fun showInterstitial(call: PluginCall) {
-        unityLevelPlay.showInterstitial(call.toInterstitialRequest())
+        capacitorAds.showInterstitial(call.toInterstitialRequest())
         call.resolve()
     }
 
     @PluginMethod
     public fun showRewarded(call: PluginCall) {
-        val result = unityLevelPlay.showRewarded(call.toRewardedRequest())
+        val result = capacitorAds.showRewarded(call.toRewardedRequest())
         val response = JSObject()
             .put("success", result.success)
-            .put("rewardGranted", result.rewardGranted)
+            .put("completed", result.completed)
             .put("message", result.message)
 
         response.put("placementId", result.placementId)
@@ -60,36 +54,8 @@ class UnityLevelPlayPlugin : Plugin() {
     }
 
     @PluginMethod
-    public fun isInterstitialReady(call: PluginCall) {
-        call.resolve(JSObject().put("ready", unityLevelPlay.isInterstitialReady()))
-    }
-
-    @PluginMethod
-    public fun isRewardedReady(call: PluginCall) {
-        call.resolve(JSObject().put("ready", unityLevelPlay.isRewardedReady()))
-    }
-
-    @PluginMethod
-    public fun setConsent(call: PluginCall) {
-        unityLevelPlay.setConsent(call.toConsentRequest())
-        call.resolve()
-    }
-
-    @PluginMethod
-    public fun setCOPPA(call: PluginCall) {
-        unityLevelPlay.setCOPPA(call.getBoolean("enabled") == true)
-        call.resolve()
-    }
-
-    @PluginMethod
-    public fun setUserId(call: PluginCall) {
-        unityLevelPlay.setUserId(call.toUserRequest())
-        call.resolve()
-    }
-
-    @PluginMethod
     public fun destroy(call: PluginCall) {
-        unityLevelPlay.destroy()
+        capacitorAds.destroy()
         call.resolve()
     }
 
@@ -121,23 +87,6 @@ class UnityLevelPlayPlugin : Plugin() {
             placementId = getString("placementId"),
             rewardAmount = getInt("rewardAmount"),
             rewardCurrency = getString("rewardCurrency"),
-        )
-    }
-
-    private fun PluginCall.toConsentRequest(): ConsentRequest {
-        return ConsentRequest(
-            gdprConsent = getBoolean("gdprConsent"),
-            doNotSell = getBoolean("doNotSell"),
-            childDirected = getBoolean("childDirected"),
-            underAgeOfConsent = getBoolean("underAgeOfConsent"),
-            consentString = getString("consentString"),
-        )
-    }
-
-    private fun PluginCall.toUserRequest(): UserRequest {
-        return UserRequest(
-            userId = getString("userId"),
-            ageRestrictedUser = getBoolean("ageRestrictedUser"),
         )
     }
 }

@@ -6,5 +6,7 @@ node_modules/
 .DS_Store
 
 
-ionic-react/node_modules/
-ionic-react/dist/
+rehovot-ads/node_modules/
+rehovot-ads/dist/
+
+rehovot-ads-packages/node_modules/

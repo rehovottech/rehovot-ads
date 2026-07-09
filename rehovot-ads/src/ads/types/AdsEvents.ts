@@ -1,12 +1,14 @@
-// Central event names for ad lifecycle notifications.
-export enum AdsEvents {
-  INITIALIZED = "INITIALIZED",
-  FAILED = "FAILED",
-  BANNER_LOADED = "BANNER_LOADED",
-  BANNER_FAILED = "BANNER_FAILED",
-  INTERSTITIAL_LOADED = "INTERSTITIAL_LOADED",
-  INTERSTITIAL_FAILED = "INTERSTITIAL_FAILED",
-  REWARDED_LOADED = "REWARDED_LOADED",
-  REWARDED_FAILED = "REWARDED_FAILED",
-  REWARDED_COMPLETED = "REWARDED_COMPLETED",
+export type AdsEventName =
+  | "initialized"
+  | "blocked"
+  | "banner-shown"
+  | "banner-hidden"
+  | "interstitial-shown"
+  | "rewarded-shown"
+  | "destroyed";
+
+export interface AdsEventPayload {
+  readonly message: string;
+  readonly reason?: string;
+  readonly placementId?: string;
 }

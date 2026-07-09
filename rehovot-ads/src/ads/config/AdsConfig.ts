@@ -1,4 +1,16 @@
-// Supported provider names for the ad framework.
+export type {
+  AdsBridgeName,
+  AdsFrequencyCapConfig,
+  AdsPlacementIds,
+  AdsPrivacyConfig,
+  AdsServiceConfig,
+} from "../types/AdsConfig";
+
+export {
+  DEFAULT_ADS_CONFIG,
+} from "../types/AdsConfig";
+
+// Compatibility types for the older provider-scaffold files still present in this repo.
 export type AdsProviderName =
   | "mock"
   | "unity"
@@ -7,19 +19,17 @@ export type AdsProviderName =
   | "admob"
   | "chartboost";
 
-// Platform-specific IDs used by a provider.
 export interface AdsPlatformConfig {
-  gameId: string;
-  banner: string;
-  interstitial: string;
-  rewarded: string;
+  readonly gameId: string;
+  readonly banner: string;
+  readonly interstitial: string;
+  readonly rewarded: string;
 }
 
-// Root configuration for the ads framework.
 export interface AdsConfig {
-  provider: AdsProviderName;
-  testMode: boolean;
-  debug: boolean;
-  android: AdsPlatformConfig;
-  ios: AdsPlatformConfig;
+  readonly provider: AdsProviderName;
+  readonly testMode: boolean;
+  readonly debug: boolean;
+  readonly android: AdsPlatformConfig;
+  readonly ios: AdsPlatformConfig;
 }

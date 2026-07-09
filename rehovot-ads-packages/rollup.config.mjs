@@ -8,11 +8,13 @@ export default {
     {
       file: "dist/plugin.js",
       format: "es",
+      inlineDynamicImports: true,
       sourcemap: true,
     },
     {
       file: "dist/plugin.cjs.js",
       format: "cjs",
+      inlineDynamicImports: true,
       exports: "named",
       sourcemap: true,
     },

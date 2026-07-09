@@ -1,20 +1,17 @@
 import { WebPlugin } from "@capacitor/core";
-import type { UnityLevelPlayPlugin } from "./definitions";
 import type {
+  AdsInitializeOptions,
   BannerOptions,
-  ConsentOptions,
-  InitializeOptions,
+  CapacitorAdsPlugin,
   InterstitialOptions,
-  RewardResult,
   RewardedOptions,
-  UserOptions,
-} from "./models";
+  RewardedResult,
+} from "./definitions";
 
-// The web implementation is a harmless placeholder for Ionic React development.
-const WEB_PLACEHOLDER_MESSAGE = "Unity LevelPlay is not implemented on web yet.";
+const WEB_PLACEHOLDER_MESSAGE = "CapacitorAds is not implemented on web.";
 
-export class UnityLevelPlayWeb extends WebPlugin implements UnityLevelPlayPlugin {
-  public async initialize(_options: InitializeOptions): Promise<void> {
+export class CapacitorAdsWeb extends WebPlugin implements CapacitorAdsPlugin {
+  public async initialize(_options: AdsInitializeOptions): Promise<void> {
     console.warn(WEB_PLACEHOLDER_MESSAGE);
   }
 
@@ -26,41 +23,17 @@ export class UnityLevelPlayWeb extends WebPlugin implements UnityLevelPlayPlugin
     console.warn(WEB_PLACEHOLDER_MESSAGE);
   }
 
-  public async destroyBanner(): Promise<void> {
-    console.warn(WEB_PLACEHOLDER_MESSAGE);
-  }
-
   public async showInterstitial(_options?: InterstitialOptions): Promise<void> {
     console.warn(WEB_PLACEHOLDER_MESSAGE);
   }
 
-  public async showRewarded(_options?: RewardedOptions): Promise<RewardResult> {
+  public async showRewarded(_options?: RewardedOptions): Promise<RewardedResult> {
     console.warn(WEB_PLACEHOLDER_MESSAGE);
     return {
       success: false,
-      rewardGranted: false,
+      completed: false,
       message: WEB_PLACEHOLDER_MESSAGE,
     };
-  }
-
-  public async isInterstitialReady(): Promise<boolean> {
-    return false;
-  }
-
-  public async isRewardedReady(): Promise<boolean> {
-    return false;
-  }
-
-  public async setConsent(_options: ConsentOptions): Promise<void> {
-    console.warn(WEB_PLACEHOLDER_MESSAGE);
-  }
-
-  public async setCOPPA(_options: { enabled: boolean }): Promise<void> {
-    console.warn(WEB_PLACEHOLDER_MESSAGE);
-  }
-
-  public async setUserId(_options: UserOptions): Promise<void> {
-    console.warn(WEB_PLACEHOLDER_MESSAGE);
   }
 
   public async destroy(): Promise<void> {

@@ -1,13 +1,17 @@
 import { registerPlugin } from "@capacitor/core";
-import type { UnityLevelPlayPlugin } from "./definitions";
+import type { CapacitorAdsPlugin } from "./definitions";
 
-// The exported singleton keeps the public JS API stable for all future native SDK swaps.
-export const UnityLevelPlay = registerPlugin<UnityLevelPlayPlugin>("UnityLevelPlay", {
-  web: () => import("./web").then((m) => new m.UnityLevelPlayWeb()),
+export const CapacitorAds = registerPlugin<CapacitorAdsPlugin>("CapacitorAds", {
+  web: () => import("./web").then((m) => new m.CapacitorAdsWeb()),
 });
 
-// Re-export the public contract from the package root.
-export * from "./definitions";
-export * from "./enums";
-export * from "./events";
-export * from "./models";
+export type {
+  AdsInitializeOptions,
+  AdsPlacementOptions,
+  AdsMetadataValue,
+  BannerOptions,
+  InterstitialOptions,
+  RewardedOptions,
+  RewardedResult,
+  CapacitorAdsPlugin,
+} from "./definitions";

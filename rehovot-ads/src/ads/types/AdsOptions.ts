@@ -1,23 +1,27 @@
-// Shared base options that future providers can extend without changing the service API.
-export interface BaseAdOptions {
-    adUnitId?: string;
-    placementId?: string;
-    metadata?: Readonly<Record<string, string | number | boolean>>;
+export type AdsMetadataValue = string | number | boolean | null;
+
+export interface AdsBaseRequest {
+  readonly placementId?: string;
+  readonly metadata?: Readonly<Record<string, AdsMetadataValue>>;
 }
 
-// Banner-specific options.
-export interface BannerOptions extends BaseAdOptions {
-    position?: "top" | "bottom";
-    format?: "banner" | "largeBanner" | "mediumRectangle" | "adaptive";
+export interface BannerOptions extends AdsBaseRequest {
+  readonly position?: "top" | "bottom";
 }
 
-// Interstitial-specific options.
-export interface InterstitialOptions extends BaseAdOptions {
-    timeoutMs?: number;
+export interface InterstitialOptions extends AdsBaseRequest {
+  readonly timeoutMs?: number;
 }
 
-// Rewarded-specific options.
-export interface RewardedOptions extends BaseAdOptions {
-    rewardAmount?: number;
-    rewardType?: string;
+export interface RewardedOptions extends AdsBaseRequest {
+  readonly rewardAmount?: number;
+  readonly rewardCurrency?: string;
+}
+
+export interface AdsInitializeOptions {
+  readonly appKey?: string;
+  readonly testMode?: boolean;
+  readonly debug?: boolean;
+  readonly autoStart?: boolean;
+  readonly metadata?: Readonly<Record<string, AdsMetadataValue>>;
 }

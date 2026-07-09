@@ -1,53 +1,48 @@
 import Capacitor
 import Foundation
 
-// Capacitor bridge only; all native logic lives in UnityLevelPlay and its managers.
-@objc(UnityLevelPlayPlugin)
-public class UnityLevelPlayPlugin: CAPPlugin {
-    private var unityLevelPlay: UnityLevelPlay?
+// Capacitor bridge only; all native behavior stays behind CapacitorAds.
+@objc(CapacitorAdsPlugin)
+public class CapacitorAdsPlugin: CAPPlugin {
+    private var capacitorAds: CapacitorAds?
 
     public override func load() {
-        unityLevelPlay = UnityLevelPlay(logger: Logger(tag: "UnityLevelPlay"))
+        capacitorAds = CapacitorAds(logger: Logger(tag: "CapacitorAds"))
     }
 
     @objc func initialize(_ call: CAPPluginCall) {
-        unityLevelPlay?.initialize(call.toInitializeRequest())
+        capacitorAds?.initialize(call.toInitializeRequest())
         call.resolve()
     }
 
     @objc func showBanner(_ call: CAPPluginCall) {
-        unityLevelPlay?.showBanner(call.toBannerRequest())
+        capacitorAds?.showBanner(call.toBannerRequest())
         call.resolve()
     }
 
     @objc func hideBanner(_ call: CAPPluginCall) {
-        unityLevelPlay?.hideBanner()
-        call.resolve()
-    }
-
-    @objc func destroyBanner(_ call: CAPPluginCall) {
-        unityLevelPlay?.destroyBanner()
+        capacitorAds?.hideBanner()
         call.resolve()
     }
 
     @objc func showInterstitial(_ call: CAPPluginCall) {
-        unityLevelPlay?.showInterstitial(call.toInterstitialRequest())
+        capacitorAds?.showInterstitial(call.toInterstitialRequest())
         call.resolve()
     }
 
     @objc func showRewarded(_ call: CAPPluginCall) {
-        guard let result = unityLevelPlay?.showRewarded(call.toRewardedRequest()) else {
+        guard let result = capacitorAds?.showRewarded(call.toRewardedRequest()) else {
             call.resolve([
                 "success": false,
-                "rewardGranted": false,
-                "message": "Unity LevelPlay bridge is not ready.",
+                "completed": false,
+                "message": "CapacitorAds bridge is not ready.",
             ])
             return
         }
 
         var response: [String: Any] = [
             "success": result.success,
-            "rewardGranted": result.rewardGranted,
+            "completed": result.completed,
             "message": result.message,
         ]
 
@@ -66,31 +61,8 @@ public class UnityLevelPlayPlugin: CAPPlugin {
         call.resolve(response)
     }
 
-    @objc func isInterstitialReady(_ call: CAPPluginCall) {
-        call.resolve(["ready": unityLevelPlay?.isInterstitialReady() ?? false])
-    }
-
-    @objc func isRewardedReady(_ call: CAPPluginCall) {
-        call.resolve(["ready": unityLevelPlay?.isRewardedReady() ?? false])
-    }
-
-    @objc func setConsent(_ call: CAPPluginCall) {
-        unityLevelPlay?.setConsent(call.toConsentRequest())
-        call.resolve()
-    }
-
-    @objc func setCOPPA(_ call: CAPPluginCall) {
-        unityLevelPlay?.setCOPPA(call.getBool("enabled") ?? false)
-        call.resolve()
-    }
-
-    @objc func setUserId(_ call: CAPPluginCall) {
-        unityLevelPlay?.setUserId(call.toUserRequest())
-        call.resolve()
-    }
-
     @objc func destroy(_ call: CAPPluginCall) {
-        unityLevelPlay?.destroy()
+        capacitorAds?.destroy()
         call.resolve()
     }
 }
@@ -124,23 +96,6 @@ private extension CAPPluginCall {
             placementId: getString("placementId"),
             rewardAmount: getInt("rewardAmount"),
             rewardCurrency: getString("rewardCurrency")
-        )
-    }
-
-    func toConsentRequest() -> ConsentRequest {
-        return ConsentRequest(
-            gdprConsent: getBool("gdprConsent"),
-            doNotSell: getBool("doNotSell"),
-            childDirected: getBool("childDirected"),
-            underAgeOfConsent: getBool("underAgeOfConsent"),
-            consentString: getString("consentString")
-        )
-    }
-
-    func toUserRequest() -> UserRequest {
-        return UserRequest(
-            userId: getString("userId"),
-            ageRestrictedUser: getBool("ageRestrictedUser")
         )
     }
 }

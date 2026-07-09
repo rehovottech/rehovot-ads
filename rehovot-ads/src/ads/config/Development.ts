@@ -1,20 +1,13 @@
-// Development configuration uses test-friendly settings and the mock provider by default.
-import type { AdsConfig } from "./AdsConfig";
+import { DEFAULT_ADS_CONFIG, type AdsServiceConfig } from "./AdsConfig";
 
-export const DevelopmentAdsConfig = {
-  provider: "mock",
-  testMode: true,
+export const DevelopmentAdsConfig: AdsServiceConfig = {
+  ...DEFAULT_ADS_CONFIG,
   debug: true,
-  android: {
-    gameId: "android-dev-game-id",
-    banner: "android-dev-banner-id",
-    interstitial: "android-dev-interstitial-id",
-    rewarded: "android-dev-rewarded-id",
+  testMode: true,
+  appKey: "TODO_REPLACE_WITH_DEVELOPMENT_APP_KEY",
+  placements: {
+    banner: "TODO_DEV_BANNER_PLACEMENT",
+    interstitial: "TODO_DEV_INTERSTITIAL_PLACEMENT",
+    rewarded: "TODO_DEV_REWARDED_PLACEMENT",
   },
-  ios: {
-    gameId: "ios-dev-game-id",
-    banner: "ios-dev-banner-id",
-    interstitial: "ios-dev-interstitial-id",
-    rewarded: "ios-dev-rewarded-id",
-  },
-} satisfies AdsConfig;
+};

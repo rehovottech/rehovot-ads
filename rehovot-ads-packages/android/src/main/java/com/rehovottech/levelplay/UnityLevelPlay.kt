@@ -1,72 +1,47 @@
-package com.rehovottech.levelplay
+package com.rehovottech.capacitorads
 
-// Root native facade keeps the public plugin bridge thin and easy to maintain.
-class UnityLevelPlay(
+// Native facade placeholder. Real SDK wiring will live here when each backend is added.
+class CapacitorAds(
     private val logger: Logger,
 ) {
-    private val consentManager = ConsentManager(logger)
-    private val bannerManager = BannerManager(logger)
-    private val interstitialManager = InterstitialManager(logger)
-    private val rewardedManager = RewardedManager(logger)
-    private val adManager = AdManager(
-        logger = logger,
-        consentManager = consentManager,
-        bannerManager = bannerManager,
-        interstitialManager = interstitialManager,
-        rewardedManager = rewardedManager,
-    )
-
     public fun initialize(options: InitializeRequest) {
         logger.setDebugEnabled(options.debug)
-        adManager.initialize(options)
+        logger.d("TODO: initialize native ad SDK")
+        logger.d("initialize options = $options")
     }
 
     public fun showBanner(options: BannerRequest) {
-        adManager.showBanner(options)
+        logger.d("TODO: show banner")
+        logger.d("banner request = $options")
     }
 
     public fun hideBanner() {
-        adManager.hideBanner()
-    }
-
-    public fun destroyBanner() {
-        adManager.destroyBanner()
+        logger.d("TODO: hide banner")
     }
 
     public fun showInterstitial(options: InterstitialRequest) {
-        adManager.showInterstitial(options)
+        logger.d("TODO: show interstitial")
+        logger.d("interstitial request = $options")
     }
 
     public fun showRewarded(options: RewardedRequest): RewardResultPayload {
-        return adManager.showRewarded(options)
-    }
-
-    public fun isInterstitialReady(): Boolean {
-        return adManager.isInterstitialReady()
-    }
-
-    public fun isRewardedReady(): Boolean {
-        return adManager.isRewardedReady()
-    }
-
-    public fun setConsent(options: ConsentRequest) {
-        adManager.setConsent(options)
-    }
-
-    public fun setCOPPA(enabled: Boolean) {
-        adManager.setCOPPA(enabled)
-    }
-
-    public fun setUserId(options: UserRequest) {
-        adManager.setUserId(options)
+        logger.d("TODO: show rewarded")
+        logger.d("rewarded request = $options")
+        return RewardResultPayload(
+            success = false,
+            completed = false,
+            message = "Native rewarded flow is not implemented yet.",
+            placementId = options.placementId,
+            rewardAmount = options.rewardAmount,
+            rewardCurrency = options.rewardCurrency,
+        )
     }
 
     public fun destroy() {
-        adManager.destroy()
+        logger.d("TODO: destroy native ad SDK")
     }
 }
 
-// Internal request models mirror the TypeScript contract without leaking SDK details.
 internal data class InitializeRequest(
     val appKey: String? = null,
     val testMode: Boolean = false,
@@ -92,22 +67,9 @@ internal data class RewardedRequest(
 
 internal data class RewardResultPayload(
     val success: Boolean,
-    val rewardGranted: Boolean,
+    val completed: Boolean,
     val message: String,
     val placementId: String? = null,
     val rewardAmount: Int? = null,
     val rewardCurrency: String? = null,
-)
-
-internal data class ConsentRequest(
-    val gdprConsent: Boolean? = null,
-    val doNotSell: Boolean? = null,
-    val childDirected: Boolean? = null,
-    val underAgeOfConsent: Boolean? = null,
-    val consentString: String? = null,
-)
-
-internal data class UserRequest(
-    val userId: String? = null,
-    val ageRestrictedUser: Boolean? = null,
 )

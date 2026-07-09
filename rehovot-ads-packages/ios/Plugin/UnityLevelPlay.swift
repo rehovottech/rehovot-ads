@@ -1,79 +1,51 @@
 import Foundation
 
-// Root native facade coordinates managers while keeping the bridge thin and stable.
-final class UnityLevelPlay {
+// Native facade placeholder. Real SDK wiring will live here when each backend is added.
+final class CapacitorAds {
     private let logger: Logger
-    private let consentManager: ConsentManager
-    private let bannerManager: BannerManager
-    private let interstitialManager: InterstitialManager
-    private let rewardedManager: RewardedManager
 
     init(logger: Logger) {
         self.logger = logger
-        self.consentManager = ConsentManager(logger: logger)
-        self.bannerManager = BannerManager(logger: logger)
-        self.interstitialManager = InterstitialManager(logger: logger)
-        self.rewardedManager = RewardedManager(logger: logger)
     }
 
     func initialize(_ options: InitializeRequest) {
         logger.setDebugEnabled(options.debug)
-        logger.debug("TODO: Initialize Unity LevelPlay SDK")
-        logger.debug("Initialize options: \(options)")
-        interstitialManager.load(InterstitialRequest(placementId: nil, timeoutMs: nil))
-        rewardedManager.load(RewardedRequest(placementId: nil, rewardAmount: nil, rewardCurrency: nil))
+        logger.debug("TODO: initialize native ad SDK")
+        logger.debug("initialize options: \(options)")
     }
 
     func showBanner(_ options: BannerRequest) {
-        bannerManager.show(options)
+        logger.debug("TODO: show banner")
+        logger.debug("banner request: \(options)")
     }
 
     func hideBanner() {
-        bannerManager.hide()
-    }
-
-    func destroyBanner() {
-        bannerManager.destroy()
+        logger.debug("TODO: hide banner")
     }
 
     func showInterstitial(_ options: InterstitialRequest) {
-        interstitialManager.show(options)
+        logger.debug("TODO: show interstitial")
+        logger.debug("interstitial request: \(options)")
     }
 
     func showRewarded(_ options: RewardedRequest) -> RewardResultPayload {
-        return rewardedManager.show(options)
-    }
-
-    func isInterstitialReady() -> Bool {
-        return interstitialManager.isReady()
-    }
-
-    func isRewardedReady() -> Bool {
-        return rewardedManager.isReady()
-    }
-
-    func setConsent(_ options: ConsentRequest) {
-        consentManager.setConsent(options)
-    }
-
-    func setCOPPA(_ enabled: Bool) {
-        consentManager.setCOPPA(enabled)
-    }
-
-    func setUserId(_ options: UserRequest) {
-        consentManager.setUserId(options)
+        logger.debug("TODO: show rewarded")
+        logger.debug("rewarded request: \(options)")
+        return RewardResultPayload(
+            success: false,
+            completed: false,
+            message: "Native rewarded flow is not implemented yet.",
+            placementId: options.placementId,
+            rewardAmount: options.rewardAmount,
+            rewardCurrency: options.rewardCurrency
+        )
     }
 
     func destroy() {
-        logger.debug("TODO: Destroy Unity LevelPlay SDK")
-        bannerManager.destroy()
-        interstitialManager.destroy()
-        rewardedManager.destroy()
-        consentManager.destroy()
+        logger.debug("TODO: destroy native ad SDK")
     }
 }
 
-// Internal request models mirror the TypeScript contract without exposing SDK specifics.
 struct InitializeRequest: CustomStringConvertible {
     let appKey: String?
     let testMode: Bool
@@ -115,30 +87,9 @@ struct RewardedRequest: CustomStringConvertible {
 
 struct RewardResultPayload {
     let success: Bool
-    let rewardGranted: Bool
+    let completed: Bool
     let message: String
     let placementId: String?
     let rewardAmount: Int?
     let rewardCurrency: String?
-}
-
-struct ConsentRequest: CustomStringConvertible {
-    let gdprConsent: Bool?
-    let doNotSell: Bool?
-    let childDirected: Bool?
-    let underAgeOfConsent: Bool?
-    let consentString: String?
-
-    var description: String {
-        "ConsentRequest(gdprConsent: \(String(describing: gdprConsent)), doNotSell: \(String(describing: doNotSell)), childDirected: \(String(describing: childDirected)), underAgeOfConsent: \(String(describing: underAgeOfConsent)), consentString: \(String(describing: consentString)))"
-    }
-}
-
-struct UserRequest: CustomStringConvertible {
-    let userId: String?
-    let ageRestrictedUser: Bool?
-
-    var description: String {
-        "UserRequest(userId: \(String(describing: userId)), ageRestrictedUser: \(String(describing: ageRestrictedUser)))"
-    }
 }

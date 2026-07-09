@@ -1,37 +1,47 @@
 import type { Plugin } from "@capacitor/core";
-import type {
-  BannerOptions,
-  ConsentOptions,
-  InitializeOptions,
-  InterstitialOptions,
-  RewardResult,
-  RewardedOptions,
-  UserOptions,
-} from "./models";
 
-// The public plugin contract remains stable even when native SDKs change underneath.
-export interface UnityLevelPlayPlugin extends Plugin {
-  initialize(options: InitializeOptions): Promise<void>;
-  showBanner(options?: BannerOptions): Promise<void>;
-  hideBanner(): Promise<void>;
-  destroyBanner(): Promise<void>;
-  showInterstitial(options?: InterstitialOptions): Promise<void>;
-  showRewarded(options?: RewardedOptions): Promise<RewardResult>;
-  isInterstitialReady(): Promise<boolean>;
-  isRewardedReady(): Promise<boolean>;
-  setConsent(options: ConsentOptions): Promise<void>;
-  setCOPPA(options: { enabled: boolean }): Promise<void>;
-  setUserId(options: UserOptions): Promise<void>;
-  destroy(): Promise<void>;
+export type AdsMetadataValue = string | number | boolean | null;
+
+export interface AdsInitializeOptions {
+  readonly appKey?: string;
+  readonly testMode?: boolean;
+  readonly debug?: boolean;
+  readonly autoStart?: boolean;
+  readonly metadata?: Readonly<Record<string, AdsMetadataValue>>;
 }
 
-// Re-export models so app code can import the contract from a single module.
-export type {
-  BannerOptions,
-  ConsentOptions,
-  InitializeOptions,
-  InterstitialOptions,
-  RewardResult,
-  RewardedOptions,
-  UserOptions,
-};
+export interface AdsPlacementOptions {
+  readonly placementId?: string;
+  readonly metadata?: Readonly<Record<string, AdsMetadataValue>>;
+}
+
+export interface BannerOptions extends AdsPlacementOptions {
+  readonly position?: "top" | "bottom";
+}
+
+export interface InterstitialOptions extends AdsPlacementOptions {
+  readonly timeoutMs?: number;
+}
+
+export interface RewardedOptions extends AdsPlacementOptions {
+  readonly rewardAmount?: number;
+  readonly rewardCurrency?: string;
+}
+
+export interface RewardedResult {
+  readonly success: boolean;
+  readonly completed: boolean;
+  readonly message?: string;
+  readonly placementId?: string;
+  readonly rewardAmount?: number;
+  readonly rewardCurrency?: string;
+}
+
+export interface CapacitorAdsPlugin extends Plugin {
+  initialize(options: AdsInitializeOptions): Promise<void>;
+  showBanner(options?: BannerOptions): Promise<void>;
+  hideBanner(): Promise<void>;
+  showInterstitial(options?: InterstitialOptions): Promise<void>;
+  showRewarded(options?: RewardedOptions): Promise<RewardedResult>;
+  destroy(): Promise<void>;
+}

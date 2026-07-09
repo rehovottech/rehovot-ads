@@ -9,6 +9,7 @@ import type {
 
 const placeholderResult = (message: string, rewardGranted = false): AdsResult => ({
   success: true,
+  skipped: false,
   message,
   rewardGranted,
 });
