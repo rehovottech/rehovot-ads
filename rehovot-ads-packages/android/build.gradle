@@ -1,0 +1,32 @@
+apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
+
+// The Android module is a Capacitor plugin shell with no SDK implementation yet.
+def capacitorVersion = rootProject.ext.has('capacitorVersion') ? rootProject.ext.capacitorVersion : '7.0.0'
+def compileSdkVersionValue = rootProject.ext.has('compileSdkVersion') ? rootProject.ext.compileSdkVersion : 34
+def minSdkVersionValue = rootProject.ext.has('minSdkVersion') ? rootProject.ext.minSdkVersion : 23
+def targetSdkVersionValue = rootProject.ext.has('targetSdkVersion') ? rootProject.ext.targetSdkVersion : 34
+
+android {
+    namespace "com.rehovottech.levelplay"
+    compileSdk compileSdkVersionValue
+
+    defaultConfig {
+        minSdk minSdkVersionValue
+        targetSdk targetSdkVersionValue
+        consumerProguardFiles 'proguard-rules.pro'
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
+    }
+
+    kotlinOptions {
+        jvmTarget = '17'
+    }
+}
+
+dependencies {
+    compileOnly "com.getcapacitor:capacitor-android:$capacitorVersion"
+}

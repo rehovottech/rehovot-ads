@@ -4,3 +4,7 @@ node_modules/
 
 .DS_Store/
 .DS_Store
+
+
+ionic-react/node_modules/
+ionic-react/dist/

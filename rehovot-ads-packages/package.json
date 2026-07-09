@@ -1,0 +1,40 @@
+{
+  "name": "@rehovottech/capacitor-unity-levelplay",
+  "version": "0.1.0",
+  "description": "Production-quality Capacitor v7 plugin scaffold for Unity LevelPlay and future ad providers.",
+  "type": "module",
+  "main": "dist/plugin.cjs.js",
+  "module": "dist/plugin.js",
+  "types": "dist/types/index.d.ts",
+  "files": [
+    "android",
+    "ios",
+    "src",
+    "dist",
+    "README.md",
+    "CapacitorUnityLevelPlay.podspec"
+  ],
+  "scripts": {
+    "build": "rollup -c rollup.config.mjs && tsc -p tsconfig.json --emitDeclarationOnly --declarationDir dist/types",
+    "clean": "rm -rf dist",
+    "lint": "tsc -p tsconfig.json --noEmit"
+  },
+  "peerDependencies": {
+    "@capacitor/core": "^7.0.0"
+  },
+  "devDependencies": {
+    "@capacitor/core": "^7.0.0",
+    "@rollup/plugin-typescript": "^12.1.4",
+    "rollup": "^4.34.0",
+    "typescript": "^5.9.0"
+  },
+  "keywords": [
+    "capacitor",
+    "ionic",
+    "react",
+    "ads",
+    "unity",
+    "levelplay"
+  ],
+  "license": "MIT"
+}
