@@ -1,19 +1,45 @@
-// Thin wrapper around Capacitor platform detection.
 import { Capacitor } from "@capacitor/core";
 
+export type RuntimePlatform = "android" | "ios" | "web" | "desktop" | "unknown";
+
 export class Platform {
-  // Returns true when running on Android.
   public static isAndroid(): boolean {
     return Capacitor.getPlatform() === "android";
   }
 
-  // Returns true when running on iOS.
   public static isIOS(): boolean {
     return Capacitor.getPlatform() === "ios";
   }
 
-  // Returns true when running in a browser.
   public static isWeb(): boolean {
     return Capacitor.getPlatform() === "web";
+  }
+
+  public static isDevelopment(): boolean {
+    return Boolean(import.meta.env.DEV);
+  }
+
+  public static getRuntimePlatform(): RuntimePlatform {
+    if (Platform.isAndroid()) {
+      return "android";
+    }
+
+    if (Platform.isIOS()) {
+      return "ios";
+    }
+
+    if (Platform.isWeb()) {
+      return Platform.isDesktopBrowser() ? "desktop" : "web";
+    }
+
+    return "unknown";
+  }
+
+  private static isDesktopBrowser(): boolean {
+    if (typeof navigator === "undefined") {
+      return false;
+    }
+
+    return /(macintosh|windows|linux)/i.test(navigator.userAgent);
   }
 }

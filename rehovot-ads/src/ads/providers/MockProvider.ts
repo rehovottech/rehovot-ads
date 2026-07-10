@@ -1,70 +1,128 @@
-// Development provider that always succeeds without touching any SDK.
-import type { IAdsProvider } from "../IAdsProvider";
-import type { AdsResult } from "../types/AdsResult";
+import type { AdsProviderContext, IAdsProvider } from "../IAdsProvider";
 import type {
+  AdsOperationResult,
+  AdsRewardedResult,
   BannerOptions,
   InterstitialOptions,
   RewardedOptions,
-} from "../types/AdsOptions";
-
-const successResult = (message: string, rewardGranted = false): AdsResult => ({
-  success: true,
-  skipped: false,
-  message,
-  rewardGranted,
-});
+} from "../types";
 
 export class MockProvider implements IAdsProvider {
-  // No SDK initialization is required for the mock provider.
-  public async initialize(): Promise<AdsResult> {
-    console.log("[Ads][Mock] initialize");
-    return successResult("Mock ads initialized.");
+  public readonly name = "mock";
+  private context: AdsProviderContext | null = null;
+
+  public async initialize(
+    context: AdsProviderContext,
+  ): Promise<AdsOperationResult> {
+    this.context = context;
+    context.emit("initialized", {
+      provider: this.name,
+      message: "Mock provider initialized.",
+    });
+
+    return this.success("Mock provider initialized.");
   }
 
-  // Banner calls only log the action and report success.
-  public async showBanner(options?: BannerOptions): Promise<AdsResult> {
-    console.log("[Ads][Mock] showBanner", options);
-    return successResult("Mock banner shown.");
+  public async showBanner(
+    options?: BannerOptions,
+  ): Promise<AdsOperationResult> {
+    this.emit("bannerLoaded", options?.placementId, "Mock banner loaded.");
+    return this.success("Mock banner shown.", options?.placementId);
   }
 
-  // Banner hide always succeeds in the mock provider.
-  public async hideBanner(): Promise<AdsResult> {
-    console.log("[Ads][Mock] hideBanner");
-    return successResult("Mock banner hidden.");
+  public async hideBanner(): Promise<AdsOperationResult> {
+    this.emit("bannerHidden", undefined, "Mock banner hidden.");
+    return this.success("Mock banner hidden.");
   }
 
-  // Interstitials are simulated as successful and immediate.
+  public async destroyBanner(): Promise<AdsOperationResult> {
+    this.emit("bannerHidden", undefined, "Mock banner destroyed.");
+    return this.success("Mock banner destroyed.");
+  }
+
   public async showInterstitial(
     options?: InterstitialOptions,
-  ): Promise<AdsResult> {
-    console.log("[Ads][Mock] showInterstitial", options);
-    return successResult("Mock interstitial shown.");
+  ): Promise<AdsOperationResult> {
+    this.emit(
+      "interstitialOpened",
+      options?.placementId,
+      "Mock interstitial opened.",
+    );
+    this.emit(
+      "interstitialClosed",
+      options?.placementId,
+      "Mock interstitial closed.",
+    );
+
+    return this.success("Mock interstitial shown.", options?.placementId);
   }
 
-  // Rewarded ads always grant the reward in development.
-  public async showRewarded(options?: RewardedOptions): Promise<AdsResult> {
-    console.log("[Ads][Mock] showRewarded", options);
-    return successResult("Mock rewarded ad completed.", true);
+  public async showRewarded(
+    options?: RewardedOptions,
+  ): Promise<AdsRewardedResult> {
+    this.emit("rewardedOpened", options?.placementId, "Mock rewarded opened.");
+    this.emit("rewardedClosed", options?.placementId, "Mock rewarded closed.");
+
+    return {
+      ...this.success("Mock rewarded shown.", options?.placementId),
+      completed: true,
+      rewardGranted: true,
+      reward: {
+        amount: options?.expectedRewardAmount,
+        currency: options?.expectedRewardCurrency,
+      },
+    };
   }
 
-  // The mock provider treats all ad formats as loaded.
-  public async isBannerLoaded(): Promise<boolean> {
+  public async isInterstitialReady(): Promise<boolean> {
     return true;
   }
 
-  // The mock provider treats all ad formats as loaded.
-  public async isInterstitialLoaded(): Promise<boolean> {
+  public async isRewardedReady(): Promise<boolean> {
     return true;
   }
 
-  // The mock provider treats all ad formats as loaded.
-  public async isRewardedLoaded(): Promise<boolean> {
-    return true;
+  public async destroy(): Promise<AdsOperationResult> {
+    return this.success("Mock provider destroyed.");
   }
 
-  // Cleanup is a no-op for the mock provider.
-  public async destroy(): Promise<AdsResult> {
-    console.log("[Ads][Mock] destroy");
-    return successResult("Mock ads destroyed.");
+  private success(
+    message: string,
+    placementId?: string,
+  ): AdsOperationResult {
+    return {
+      success: true,
+      supported: true,
+      skipped: false,
+      provider: this.name,
+      message,
+      placementId,
+    };
+  }
+
+  private emit(
+    eventName:
+      | "bannerLoaded"
+      | "bannerHidden"
+      | "interstitialOpened"
+      | "interstitialClosed"
+      | "rewardedOpened"
+      | "rewardedClosed",
+    placementId: string | undefined,
+    message: string,
+  ): void {
+    this.requireContext().emit(eventName, {
+      provider: this.name,
+      placementId,
+      message,
+    });
+  }
+
+  private requireContext(): AdsProviderContext {
+    if (this.context === null) {
+      throw new Error("MockProvider is not initialized.");
+    }
+
+    return this.context;
   }
 }

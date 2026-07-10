@@ -34,10 +34,6 @@ export class Logger {
   }
 
   public error(message: string, details?: unknown): void {
-    if (!this.debugEnabled) {
-      return;
-    }
-
     if (details === undefined) {
       console.error(`[${this.scope}] ${message}`);
       return;

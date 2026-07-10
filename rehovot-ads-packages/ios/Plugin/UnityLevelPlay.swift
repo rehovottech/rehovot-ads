@@ -23,6 +23,10 @@ final class CapacitorAds {
         logger.debug("TODO: hide banner")
     }
 
+    func destroyBanner() {
+        logger.debug("TODO: destroy banner")
+    }
+
     func showInterstitial(_ options: InterstitialRequest) {
         logger.debug("TODO: show interstitial")
         logger.debug("interstitial request: \(options)")

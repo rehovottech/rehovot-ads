@@ -23,6 +23,10 @@ export class CapacitorAdsWeb extends WebPlugin implements CapacitorAdsPlugin {
     console.warn(WEB_PLACEHOLDER_MESSAGE);
   }
 
+  public async destroyBanner(): Promise<void> {
+    console.warn(WEB_PLACEHOLDER_MESSAGE);
+  }
+
   public async showInterstitial(_options?: InterstitialOptions): Promise<void> {
     console.warn(WEB_PLACEHOLDER_MESSAGE);
   }

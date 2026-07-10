@@ -1,26 +1,13 @@
-import type { Logger } from "./utils/Logger";
-import type {
-  BannerOptions,
-  InterstitialOptions,
-  RewardedOptions,
-} from "./types/AdsOptions";
-import type { AdsEventPayloadMap, AdsEventName } from "./types/AdsEvents";
+import type { AdsProviderContext } from "../../IAdsProvider";
 import type {
   AdsOperationResult,
   AdsRewardedResult,
-} from "./types/AdsResult";
-import type { ResolvedAdsConfiguration } from "./types/AdsConfiguration";
+  BannerOptions,
+  InterstitialOptions,
+  RewardedOptions,
+} from "../../types";
 
-export interface AdsProviderContext {
-  readonly configuration: ResolvedAdsConfiguration;
-  readonly logger: Logger;
-  readonly emit: <TEvent extends AdsEventName>(
-    eventName: TEvent,
-    payload: AdsEventPayloadMap[TEvent],
-  ) => void;
-}
-
-export interface IAdsProvider {
+export interface IWebAdsAdapter {
   readonly name: string;
   initialize(context: AdsProviderContext): Promise<AdsOperationResult>;
   showBanner(options?: BannerOptions): Promise<AdsOperationResult>;

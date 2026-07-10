@@ -14,14 +14,6 @@ export interface InterstitialOptions extends AdsBaseRequest {
 }
 
 export interface RewardedOptions extends AdsBaseRequest {
-  readonly rewardAmount?: number;
-  readonly rewardCurrency?: string;
-}
-
-export interface AdsInitializeOptions {
-  readonly appKey?: string;
-  readonly testMode?: boolean;
-  readonly debug?: boolean;
-  readonly autoStart?: boolean;
-  readonly metadata?: Readonly<Record<string, AdsMetadataValue>>;
+  readonly expectedRewardAmount?: number;
+  readonly expectedRewardCurrency?: string;
 }

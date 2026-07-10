@@ -19,6 +19,10 @@ class CapacitorAds(
         logger.d("TODO: hide banner")
     }
 
+    public fun destroyBanner() {
+        logger.d("TODO: destroy banner")
+    }
+
     public fun showInterstitial(options: InterstitialRequest) {
         logger.d("TODO: show interstitial")
         logger.d("interstitial request = $options")

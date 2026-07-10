@@ -34,6 +34,12 @@ class CapacitorAdsPlugin : Plugin() {
     }
 
     @PluginMethod
+    public fun destroyBanner(call: PluginCall) {
+        capacitorAds.destroyBanner()
+        call.resolve()
+    }
+
+    @PluginMethod
     public fun showInterstitial(call: PluginCall) {
         capacitorAds.showInterstitial(call.toInterstitialRequest())
         call.resolve()

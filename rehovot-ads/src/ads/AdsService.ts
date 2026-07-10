@@ -1,16 +1,21 @@
-import { DEFAULT_ADS_CONFIG, type AdsServiceConfig } from "./types/AdsConfig";
+import { AdsEventBus } from "./AdsEventBus";
+import { AdsProviderFactory } from "./AdsProviderFactory";
+import type { IAdsProvider } from "./IAdsProvider";
+import { resolveAdsConfiguration } from "./config";
 import type {
-  AdsFrequencyState,
+  AdsConfiguration,
+  AdsEventListener,
+  AdsEventName,
+  AdsEventPayloadMap,
   AdsFormat,
-  AdsOutcome,
-  AdsRewardOutcome,
-} from "./types/AdsResult";
-import type {
+  AdsFrequencyState,
+  AdsOperationResult,
+  AdsRewardedResult,
   BannerOptions,
   InterstitialOptions,
+  ResolvedAdsConfiguration,
   RewardedOptions,
-} from "./types/AdsOptions";
-import { AdsManager } from "./AdsManager";
+} from "./types";
 import { Logger } from "./utils/Logger";
 
 export class AdsService {
@@ -24,46 +29,204 @@ export class AdsService {
     return AdsService.instance;
   }
 
-  private readonly manager = new AdsManager();
   private readonly logger = new Logger("AdsService");
-  private config: AdsServiceConfig = {};
+  private readonly events = new AdsEventBus();
+  private configuration: ResolvedAdsConfiguration | null = null;
+  private provider: IAdsProvider | null = null;
   private initialized = false;
-  private sessionCounts: Partial<Record<AdsFormat, number>> = {};
   private lastShownAt: Partial<Record<AdsFormat, number>> = {};
-  private onlineOverride: boolean | null = null;
+  private sessionCounts: Partial<Record<AdsFormat, number>> = {};
+  private internetConnected = true;
 
   private constructor() {}
 
-  public configure(config: AdsServiceConfig): void {
-    this.config = {
-      ...this.config,
-      ...config,
-      placements: {
-        ...DEFAULT_ADS_CONFIG.placements,
-        ...this.config.placements,
-        ...config.placements,
-      },
-      frequencyCap: {
-        ...DEFAULT_ADS_CONFIG.frequencyCap,
-        ...this.config.frequencyCap,
-        ...config.frequencyCap,
-      },
-      privacy: {
-        ...DEFAULT_ADS_CONFIG.privacy,
-        ...this.config.privacy,
-        ...config.privacy,
-      },
-    };
+  public async initialize(
+    configuration: AdsConfiguration,
+  ): Promise<AdsOperationResult> {
+    if (this.provider !== null && this.initialized) {
+      await this.provider.destroy();
+    }
 
-    this.logger.configure(this.config.debug ?? DEFAULT_ADS_CONFIG.debug);
+    this.configuration = resolveAdsConfiguration(configuration);
+    this.logger.configure(this.configuration.debug);
+    this.provider = AdsProviderFactory.create(this.configuration);
+
+    const gate = this.evaluateGlobalPolicy();
+    if (gate !== null) {
+      return gate;
+    }
+
+    const result = await this.provider.initialize({
+      configuration: this.configuration,
+      logger: this.logger,
+      emit: (eventName, payload) => {
+        this.emit(eventName, payload);
+      },
+    });
+
+    this.initialized = result.success;
+    if (!result.success) {
+      this.emit("failed", {
+        provider: result.provider,
+        reason: result.reason ?? "provider-error",
+        message: result.message,
+        placementId: result.placementId,
+      });
+    }
+
+    return result;
   }
 
-  public getConfig(): Readonly<AdsServiceConfig> {
-    return this.config;
+  public async showBanner(
+    options?: BannerOptions,
+  ): Promise<AdsOperationResult> {
+    const provider = await this.ensureProvider();
+    if (this.isResult(provider)) {
+      return provider;
+    }
+
+    const gate = this.evaluateAdRequest("banner");
+    if (gate !== null) {
+      return gate;
+    }
+
+    const result = await provider.showBanner(options);
+    if (result.success) {
+      this.recordAdDisplay("banner");
+    }
+
+    return result;
   }
 
-  public setOnlineState(online: boolean | null): void {
-    this.onlineOverride = online;
+  public async hideBanner(): Promise<AdsOperationResult> {
+    const provider = await this.ensureProvider();
+    if (this.isResult(provider)) {
+      return provider;
+    }
+
+    return provider.hideBanner();
+  }
+
+  public async destroyBanner(): Promise<AdsOperationResult> {
+    const provider = await this.ensureProvider();
+    if (this.isResult(provider)) {
+      return provider;
+    }
+
+    return provider.destroyBanner();
+  }
+
+  public async showInterstitial(
+    options?: InterstitialOptions,
+  ): Promise<AdsOperationResult> {
+    const provider = await this.ensureProvider();
+    if (this.isResult(provider)) {
+      return provider;
+    }
+
+    const gate = this.evaluateAdRequest("interstitial");
+    if (gate !== null) {
+      return gate;
+    }
+
+    const ready = await provider.isInterstitialReady();
+    if (!ready) {
+      return this.blocked("not-ready", "Interstitial is not ready yet.");
+    }
+
+    const result = await provider.showInterstitial(options);
+    if (result.success) {
+      this.recordAdDisplay("interstitial");
+    }
+
+    return result;
+  }
+
+  public async showRewarded(
+    options?: RewardedOptions,
+  ): Promise<AdsRewardedResult> {
+    const provider = await this.ensureProvider();
+    if (this.isResult(provider)) {
+      return {
+        ...provider,
+        completed: false,
+        rewardGranted: false,
+      };
+    }
+
+    const gate = this.evaluateAdRequest("rewarded");
+    if (gate !== null) {
+      return {
+        ...gate,
+        completed: false,
+        rewardGranted: false,
+      };
+    }
+
+    const ready = await provider.isRewardedReady();
+    if (!ready) {
+      return {
+        ...this.blocked("not-ready", "Rewarded ad is not ready yet."),
+        completed: false,
+        rewardGranted: false,
+      };
+    }
+
+    const result = await provider.showRewarded(options);
+    if (!result.success || !result.rewardGranted) {
+      return result;
+    }
+
+    const validation = this.validateReward(result, options);
+    if (validation !== null) {
+      return {
+        ...validation,
+        completed: result.completed,
+        rewardGranted: false,
+      };
+    }
+
+    this.recordAdDisplay("rewarded");
+    this.emit("rewardGranted", {
+      provider: result.provider,
+      placementId: result.placementId,
+      message: result.message,
+      rewardAmount: result.reward?.amount,
+      rewardCurrency: result.reward?.currency,
+    });
+    this.emit("rewardCompleted", {
+      provider: result.provider,
+      placementId: result.placementId,
+      message: result.message,
+      rewardAmount: result.reward?.amount,
+      rewardCurrency: result.reward?.currency,
+    });
+    return result;
+  }
+
+  public async destroy(): Promise<AdsOperationResult> {
+    if (this.provider === null) {
+      return this.blocked("not-initialized", "Ads service is not initialized.");
+    }
+
+    const result = await this.provider.destroy();
+    this.provider = null;
+    this.configuration = null;
+    this.initialized = false;
+    this.lastShownAt = {};
+    this.sessionCounts = {};
+    return result;
+  }
+
+  public on<TEvent extends AdsEventName>(
+    eventName: TEvent,
+    listener: AdsEventListener<TEvent>,
+  ): () => void {
+    return this.events.on(eventName, listener);
+  }
+
+  public getConfiguration(): ResolvedAdsConfiguration | null {
+    return this.configuration;
   }
 
   public getFrequencyState(): AdsFrequencyState {
@@ -73,303 +236,205 @@ export class AdsService {
     };
   }
 
-  public async initialize(): Promise<AdsOutcome> {
-    if (this.initialized) {
-      return this.success("Ads bridge already initialized.");
-    }
-
-    const decision = this.getGateDecision("initialize");
-    if (!decision.allowed) {
-      return this.skip(decision.reason, decision.message);
-    }
-
-    const initOptions = {
-      appKey: this.config.appKey,
-      testMode: this.config.testMode ?? DEFAULT_ADS_CONFIG.testMode,
-      debug: this.config.debug ?? DEFAULT_ADS_CONFIG.debug,
-      autoStart: true,
-    };
-
-    this.logger.info("Initializing ads bridge.", initOptions);
-
-    await this.manager.initialize(initOptions);
-    this.initialized = true;
-
-    return this.success("Ads bridge initialized.");
+  public setInternetConnected(connected: boolean): void {
+    this.internetConnected = connected;
   }
 
-  public async showBanner(options?: BannerOptions): Promise<AdsOutcome> {
-    const decision = this.getGateDecision("banner");
-    if (!decision.allowed) {
-      return this.skip(decision.reason, decision.message);
+  private async ensureProvider(): Promise<IAdsProvider | AdsOperationResult> {
+    if (this.provider === null || !this.initialized) {
+      return this.blocked("not-initialized", "Ads service is not initialized.");
     }
 
-    const initialization = await this.ensureInitialized();
-    if (initialization !== null) {
-      return initialization;
-    }
-
-    await this.manager.showBanner({
-      ...options,
-      placementId: options?.placementId ?? this.config.placements?.banner,
-    });
-    this.recordShow("banner");
-
-    return this.success("Banner requested.");
+    return this.provider;
   }
 
-  public async hideBanner(): Promise<AdsOutcome> {
-    const initialization = await this.ensureInitialized();
-    if (initialization !== null) {
-      return initialization;
-    }
-
-    await this.manager.hideBanner();
-    return this.success("Banner hidden.");
+  private isResult(
+    value: IAdsProvider | AdsOperationResult,
+  ): value is AdsOperationResult {
+    return "success" in value;
   }
 
-  public async showInterstitial(
-    options?: InterstitialOptions,
-  ): Promise<AdsOutcome> {
-    const decision = this.getGateDecision("interstitial");
-    if (!decision.allowed) {
-      return this.skip(decision.reason, decision.message);
+  private evaluateGlobalPolicy(): AdsOperationResult | null {
+    const configuration = this.requireConfiguration();
+
+    if (configuration.premiumUser) {
+      return this.blocked("premium-user", "Ads are disabled for premium users.");
     }
 
-    const initialization = await this.ensureInitialized();
-    if (initialization !== null) {
-      return initialization;
-    }
-
-    await this.manager.showInterstitial({
-      ...options,
-      placementId: options?.placementId ?? this.config.placements?.interstitial,
-    });
-    this.recordShow("interstitial");
-
-    return this.success("Interstitial requested.");
-  }
-
-  public async showRewarded(
-    options?: RewardedOptions,
-  ): Promise<AdsRewardOutcome> {
-    const decision = this.getGateDecision("rewarded");
-    if (!decision.allowed) {
-      return this.skipReward(decision.reason, decision.message, options);
-    }
-
-    const initialization = await this.ensureInitialized();
-    if (initialization !== null) {
-      return this.skipReward(
-        initialization.reason,
-        initialization.message,
-        options,
+    if (configuration.gdpr && configuration.gdprConsentGranted !== true) {
+      return this.blocked(
+        "gdpr-consent-missing",
+        "GDPR consent is required before initializing ads.",
       );
     }
 
-    const nativeResult = await this.manager.showRewarded({
-      ...options,
-      placementId: options?.placementId ?? this.config.placements?.rewarded,
-    });
-    this.recordShow("rewarded");
+    if (configuration.ccpa && configuration.ccpaOptOut) {
+      return this.blocked(
+        "ccpa-restricted",
+        "CCPA opt-out prevents ads from being initialized.",
+      );
+    }
 
-    return {
-      success: nativeResult.success,
-      skipped: false,
-      reason: nativeResult.success ? undefined : "bridge-error",
-      message: nativeResult.message ?? "Rewarded ad completed.",
-      rewardGranted: nativeResult.success && nativeResult.completed,
-      completed: nativeResult.completed,
-      placementId: nativeResult.placementId ?? options?.placementId,
-      rewardAmount: nativeResult.rewardAmount ?? options?.rewardAmount,
-      rewardCurrency: nativeResult.rewardCurrency ?? options?.rewardCurrency,
-    };
+    return null;
   }
 
-  public async destroy(): Promise<AdsOutcome> {
-    await this.manager.destroy();
-    this.initialized = false;
-    this.lastShownAt = {};
-    this.sessionCounts = {};
+  private evaluateAdRequest(format: AdsFormat): AdsOperationResult | null {
+    const configuration = this.requireConfiguration();
 
-    return this.success("Ads bridge destroyed.");
+    if (configuration.premiumUser) {
+      return this.blocked("premium-user", "Ads are disabled for premium users.");
+    }
+
+    if (configuration.coppa && format === "rewarded") {
+      return this.blocked(
+        "coppa-restricted",
+        "Rewarded ads are disabled for COPPA-restricted users.",
+      );
+    }
+
+    if (configuration.requireInternet && !this.internetConnected) {
+      return this.blocked("offline", "Ads are unavailable while offline.");
+    }
+
+    if (this.isFrequencyCapped(format)) {
+      return this.blocked(
+        "frequency-cap",
+        `${format} request blocked by frequency capping.`,
+      );
+    }
+
+    return null;
   }
 
-  private async ensureInitialized(): Promise<AdsOutcome | null> {
-    if (this.initialized) {
-      return null;
-    }
-
-    const result = await this.initialize();
-    return result.skipped || !result.success ? result : null;
-  }
-
-  private getGateDecision(format: "initialize" | AdsFormat): {
-    allowed: boolean;
-    reason?: AdsOutcome["reason"];
-    message: string;
-  } {
-    if ((this.config.premiumUser ?? DEFAULT_ADS_CONFIG.premiumUser) === true) {
-      return {
-        allowed: false,
-        reason: "premium-user",
-        message: "Ads are disabled for premium users.",
-      };
-    }
-
-    if (!this.config.appKey) {
-      return {
-        allowed: false,
-        reason: "not-configured",
-        message: "Ads configuration is missing an app key.",
-      };
-    }
-
-    if (this.isCoppaBlocked()) {
-      return {
-        allowed: false,
-        reason: "coppa",
-        message: "Ads are blocked by COPPA policy.",
-      };
-    }
-
-    if (this.isGdprBlocked()) {
-      return {
-        allowed: false,
-        reason: "gdpr",
-        message: "Ads are blocked because GDPR consent is missing.",
-      };
-    }
-
-    if (this.isOffline() && (this.config.requireInternet ?? DEFAULT_ADS_CONFIG.requireInternet)) {
-      return {
-        allowed: false,
-        reason: "offline",
-        message: "Ads are unavailable while the device is offline.",
-      };
-    }
-
-    if (format !== "initialize" && !this.initialized) {
-      return {
-        allowed: false,
-        reason: "not-initialized",
-        message: "Ads must be initialized before showing placements.",
-      };
-    }
-
-    if (format === "interstitial" || format === "rewarded") {
-      const frequencyDecision = this.isFrequencyBlocked(format);
-      if (!frequencyDecision.allowed) {
-        return frequencyDecision;
-      }
-    }
-
-    return {
-      allowed: true,
-      message: "Allowed.",
-    };
-  }
-
-  private isFrequencyBlocked(
-    format: Exclude<AdsFormat, "banner">,
-  ): { allowed: boolean; reason?: AdsOutcome["reason"]; message: string } {
-    const caps = this.config.frequencyCap ?? DEFAULT_ADS_CONFIG.frequencyCap;
+  private isFrequencyCapped(format: AdsFormat): boolean {
+    const configuration = this.requireConfiguration();
+    const cooldown = this.getCooldownMs(configuration, format);
+    const maxPerSession = this.getMaxPerSession(configuration, format);
     const lastShownAt = this.lastShownAt[format];
-    const countThisSession = this.sessionCounts[format] ?? 0;
-    const cooldownMs =
-      format === "interstitial"
-        ? caps.interstitialCooldownMs ?? 0
-        : caps.rewardedCooldownMs ?? 0;
-    const maxPerSession =
-      format === "interstitial"
-        ? caps.interstitialMaxPerSession ?? 0
-        : caps.rewardedMaxPerSession ?? 0;
+    const shownCount = this.sessionCounts[format] ?? 0;
 
-    if (maxPerSession > 0 && countThisSession >= maxPerSession) {
-      return {
-        allowed: false,
-        reason: "frequency-cap",
-        message: `${format} frequency cap reached for this session.`,
-      };
-    }
-
-    if (lastShownAt !== undefined && cooldownMs > 0) {
-      const elapsed = Date.now() - lastShownAt;
-      if (elapsed < cooldownMs) {
-        return {
-          allowed: false,
-          reason: "frequency-cap",
-          message: `${format} cooldown is still active.`,
-        };
+    if (cooldown > 0 && lastShownAt !== undefined) {
+      if (Date.now() - lastShownAt < cooldown) {
+        return true;
       }
     }
 
-    return {
-      allowed: true,
-      message: "Allowed.",
-    };
-  }
-
-  private isCoppaBlocked(): boolean {
-    return this.config.privacy?.coppaEnabled === true;
-  }
-
-  private isGdprBlocked(): boolean {
-    const consent = this.config.privacy?.gdprConsent;
-    return consent === false;
-  }
-
-  private isOffline(): boolean {
-    if (this.onlineOverride !== null) {
-      return !this.onlineOverride;
+    if (maxPerSession > 0 && shownCount >= maxPerSession) {
+      return true;
     }
 
-    if (typeof navigator === "undefined") {
-      return false;
-    }
-
-    return navigator.onLine === false;
+    return false;
   }
 
-  private recordShow(format: AdsFormat): void {
+  private getCooldownMs(
+    configuration: ResolvedAdsConfiguration,
+    format: AdsFormat,
+  ): number {
+    switch (format) {
+      case "banner":
+        return 0;
+      case "interstitial":
+        return configuration.frequency.interstitialCooldownMs;
+      case "rewarded":
+        return configuration.frequency.rewardedCooldownMs;
+    }
+  }
+
+  private getMaxPerSession(
+    configuration: ResolvedAdsConfiguration,
+    format: AdsFormat,
+  ): number {
+    switch (format) {
+      case "banner":
+        return 0;
+      case "interstitial":
+        return configuration.frequency.interstitialMaxPerSession;
+      case "rewarded":
+        return configuration.frequency.rewardedMaxPerSession;
+    }
+  }
+
+  private recordAdDisplay(format: AdsFormat): void {
     this.lastShownAt[format] = Date.now();
     this.sessionCounts[format] = (this.sessionCounts[format] ?? 0) + 1;
   }
 
-  private success(message: string): AdsOutcome {
-    this.logger.info(message);
-    return {
-      success: true,
-      skipped: false,
-      message,
-    };
+  private validateReward(
+    result: AdsRewardedResult,
+    options?: RewardedOptions,
+  ): AdsOperationResult | null {
+    if (!result.rewardGranted) {
+      return null;
+    }
+
+    if (
+      options?.expectedRewardAmount !== undefined &&
+      result.reward?.amount !== undefined &&
+      options.expectedRewardAmount !== result.reward.amount
+    ) {
+      return this.blocked(
+        "reward-mismatch",
+        "Reward amount does not match the expected value.",
+        result.provider,
+        result.placementId,
+      );
+    }
+
+    if (
+      options?.expectedRewardCurrency !== undefined &&
+      result.reward?.currency !== undefined &&
+      options.expectedRewardCurrency !== result.reward.currency
+    ) {
+      return this.blocked(
+        "reward-mismatch",
+        "Reward currency does not match the expected value.",
+        result.provider,
+        result.placementId,
+      );
+    }
+
+    return null;
   }
 
-  private skip(
-    reason: NonNullable<AdsOutcome["reason"]> | undefined,
+  private blocked(
+    reason: AdsOperationResult["reason"],
     message: string,
-  ): AdsOutcome {
-    this.logger.warn(message, { reason });
-    return {
+    provider?: string,
+    placementId?: string,
+  ): AdsOperationResult {
+    const result: AdsOperationResult = {
       success: false,
+      supported: true,
       skipped: true,
+      provider: provider ?? this.provider?.name ?? "unresolved",
       reason,
       message,
+      placementId,
     };
+
+    this.emit("failed", {
+      provider: result.provider,
+      reason: reason ?? "provider-error",
+      message,
+      placementId,
+    });
+
+    this.logger.warn(message, { reason, placementId });
+    return result;
   }
 
-  private skipReward(
-    reason: NonNullable<AdsOutcome["reason"]> | undefined,
-    message: string,
-    options?: RewardedOptions,
-  ): AdsRewardOutcome {
-    return {
-      ...this.skip(reason, message),
-      rewardGranted: false,
-      completed: false,
-      placementId: options?.placementId ?? this.config.placements?.rewarded,
-      rewardAmount: options?.rewardAmount,
-      rewardCurrency: options?.rewardCurrency,
-    };
+  private emit<TEvent extends AdsEventName>(
+    eventName: TEvent,
+    payload: AdsEventPayloadMap[TEvent],
+  ): void {
+    this.events.emit(eventName, payload);
+  }
+
+  private requireConfiguration(): ResolvedAdsConfiguration {
+    if (this.configuration === null) {
+      throw new Error("Ads configuration is not available.");
+    }
+
+    return this.configuration;
   }
 }

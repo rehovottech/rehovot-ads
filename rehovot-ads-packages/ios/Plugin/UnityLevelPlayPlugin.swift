@@ -25,6 +25,11 @@ public class CapacitorAdsPlugin: CAPPlugin {
         call.resolve()
     }
 
+    @objc func destroyBanner(_ call: CAPPluginCall) {
+        capacitorAds?.destroyBanner()
+        call.resolve()
+    }
+
     @objc func showInterstitial(_ call: CAPPluginCall) {
         capacitorAds?.showInterstitial(call.toInterstitialRequest())
         call.resolve()

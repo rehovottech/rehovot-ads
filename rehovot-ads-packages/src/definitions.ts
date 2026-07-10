@@ -41,6 +41,7 @@ export interface CapacitorAdsPlugin extends Plugin {
   initialize(options: AdsInitializeOptions): Promise<void>;
   showBanner(options?: BannerOptions): Promise<void>;
   hideBanner(): Promise<void>;
+  destroyBanner(): Promise<void>;
   showInterstitial(options?: InterstitialOptions): Promise<void>;
   showRewarded(options?: RewardedOptions): Promise<RewardedResult>;
   destroy(): Promise<void>;

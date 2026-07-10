@@ -2,43 +2,40 @@ export type AdsFormat = "banner" | "interstitial" | "rewarded";
 
 export type AdsBlockReason =
   | "not-configured"
+  | "provider-unsupported"
   | "premium-user"
-  | "coppa"
-  | "gdpr"
+  | "coppa-restricted"
+  | "gdpr-consent-missing"
+  | "ccpa-restricted"
   | "offline"
   | "frequency-cap"
   | "not-initialized"
-  | "bridge-error";
+  | "not-ready"
+  | "reward-mismatch"
+  | "provider-error";
 
-export interface AdsOutcome {
+export interface AdsOperationResult {
   readonly success: boolean;
+  readonly supported: boolean;
   readonly skipped: boolean;
-  readonly reason?: AdsBlockReason;
+  readonly provider: string;
   readonly message: string;
-  readonly rewardGranted?: boolean;
+  readonly reason?: AdsBlockReason;
+  readonly placementId?: string;
 }
 
-export interface AdsRewardOutcome extends AdsOutcome {
+export interface AdsReward {
+  readonly amount?: number;
+  readonly currency?: string;
+}
+
+export interface AdsRewardedResult extends AdsOperationResult {
+  readonly completed: boolean;
   readonly rewardGranted: boolean;
-  readonly completed: boolean;
-  readonly placementId?: string;
-  readonly rewardAmount?: number;
-  readonly rewardCurrency?: string;
-}
-
-export interface AdsNativeRewardResult {
-  readonly success: boolean;
-  readonly completed: boolean;
-  readonly message?: string;
-  readonly placementId?: string;
-  readonly rewardAmount?: number;
-  readonly rewardCurrency?: string;
+  readonly reward?: AdsReward;
 }
 
 export interface AdsFrequencyState {
   readonly lastShownAt: Readonly<Partial<Record<AdsFormat, number>>>;
   readonly countThisSession: Readonly<Partial<Record<AdsFormat, number>>>;
 }
-
-// Compatibility alias for the older provider layer that still exists in this tree.
-export type AdsResult = AdsOutcome;
