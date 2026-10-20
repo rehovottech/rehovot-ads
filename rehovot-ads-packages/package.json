@@ -1,7 +1,7 @@
 {
   "name": "@rehovottech/capacitor-ads",
-  "version": "0.1.0",
-  "description": "Reusable Capacitor ad bridge for native SDK backends.",
+  "version": "0.2.0",
+  "description": "Reusable Capacitor ad bridge for Rehovot games. Native backend: Unity Ads SDK (interstitial, rewarded, banner).",
   "type": "module",
   "main": "src/index.ts",
   "module": "src/index.ts",
@@ -34,7 +34,16 @@
     "ads",
     "bridge",
     "mediation",
-    "levelplay"
+    "levelplay",
+    "unity-ads"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "capacitor": {
+    "ios": {
+      "src": "ios"
+    },
+    "android": {
+      "src": "android"
+    }
+  }
 }

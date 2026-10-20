@@ -1,1 +1,2 @@
-# This plugin ships without a native ad SDK, so no special shrinker rules are required yet.
+# Unity Ads ships its own consumer rules; keep the Capacitor bridge class names.
+-keep class com.rehovottech.levelplay.** { *; }

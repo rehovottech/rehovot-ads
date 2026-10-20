@@ -1,156 +1,79 @@
-# @rehovottech/capacitor-unity-levelplay
+# @rehovottech/capacitor-ads
 
-Capacitor v7 plugin scaffold for Unity LevelPlay with a provider-ready architecture.
+Reusable Capacitor 8 ad bridge for Rehovot games.
+Native backend: **Unity Ads SDK 4.20** (interstitial, rewarded, banner) on Android and iOS, with a silent web fallback.
 
-This package is intentionally shipped **without Unity SDK implementation**.
-It provides the full public API, typed models, platform-specific native shells, and TODO placeholders so the native SDK layer can be added later without changing the JavaScript contract.
+The JavaScript contract (`src/definitions.ts`) is provider-neutral, so the native backend can later move to
+Unity LevelPlay mediation (or another network) without changing game code.
 
-## Features
-
-- Ionic React friendly
-- Capacitor v7 compatible
-- Android support scaffold in Kotlin
-- iOS support scaffold in Swift
-- Strongly typed TypeScript API
-- Capacitor listener event names defined up front
-- No SDK calls yet
-- Easy to extend for future providers such as Unity Ads, AppLovin, Chartboost, AdMob, Pangle, InMobi, and Liftoff
-
-## Installation
+## Install
 
 ```bash
-npm install @rehovottech/capacitor-unity-levelplay
+npm install file:../../plugins/rehovot-ads/rehovot-ads-packages   # from a game folder
 npx cap sync
 ```
 
-## Public API
+- **iOS** pulls the `UnityAds` pod (CocoaPods). Xcode 26+ is required by Unity Ads 4.18+.
+  Add `NSUserTrackingUsageDescription` and Unity's `SKAdNetworkItems` to the app's `Info.plist`.
+- **Android** pulls `com.unity3d.ads:unity-ads:4.20.1`. Override with `unityAdsVersion` in `variables.gradle`.
 
-Import the plugin from the package entry point:
+## Usage
 
 ```ts
-import {
-  UnityLevelPlay,
-  UnityLevelPlayEventName,
-  type InitializeOptions,
-  type BannerOptions,
-  type InterstitialOptions,
-  type RewardedOptions,
-  type ConsentOptions,
-  type UserOptions,
-} from "@rehovottech/capacitor-unity-levelplay";
+import { CapacitorAds } from "@rehovottech/capacitor-ads";
+
+await CapacitorAds.setConsent({ gdprConsent: true, doNotSell: false });
+await CapacitorAds.requestTracking();                // iOS ATT prompt; "unavailable" elsewhere
+
+await CapacitorAds.initialize({
+  appKey: "1234567",                                 // Unity Game ID for this platform
+  testMode: true,
+  placements: { interstitial: "Interstitial_Android", rewarded: "Rewarded_Android" },
+});                                                   // autoStart (default) preloads both formats
+
+if ((await CapacitorAds.isRewardedReady()).value) {
+  const r = await CapacitorAds.showRewarded();
+  if (r.completed) {
+    // grant the reward
+  }
+}
+
+const i = await CapacitorAds.showInterstitial();     // resolves when closed; i.success = was shown
 ```
 
-### Methods
+After each show the plugin reloads that placement automatically. Failed loads retry with a back-off of 5 s, 10 s, 20 s … up to 60 s.
 
-- `initialize(options: InitializeOptions): Promise<void>`
-- `showBanner(options?: BannerOptions): Promise<void>`
-- `hideBanner(): Promise<void>`
-- `destroyBanner(): Promise<void>`
-- `showInterstitial(options?: InterstitialOptions): Promise<void>`
-- `showRewarded(options?: RewardedOptions): Promise<RewardResult>`
-- `isInterstitialReady(): Promise<boolean>`
-- `isRewardedReady(): Promise<boolean>`
-- `setConsent(options: ConsentOptions): Promise<void>`
-- `setCOPPA(enabled: boolean): Promise<void>`
-- `setUserId(options: UserOptions): Promise<void>`
-- `destroy(): Promise<void>`
+## Methods
+
+| Method | Notes |
+|---|---|
+| `initialize({ appKey, testMode, debug, autoStart, placements })` | Rejects with `INVALID_CONFIGURATION` or `INIT_FAILED` |
+| `loadInterstitial / loadRewarded({ placementId? })` | Optional; resolves once filled |
+| `isInterstitialReady / isRewardedReady({ placementId? })` | `{ value: boolean }` |
+| `showInterstitial({ placementId? })` | `{ success, message }` |
+| `showRewarded({ placementId? })` | `{ success, completed }`; grant the reward only when `completed` |
+| `showBanner({ placementId?, position })`, `hideBanner()`, `destroyBanner()` | 320×50, top or bottom safe area |
+| `setConsent({ gdprConsent?, doNotSell?, childDirected? })` | Unity metadata `gdpr.consent`, `privacy.consent`, `user.nonbehavioral` |
+| `requestTracking()` | iOS 14+ App Tracking Transparency |
+| `destroy()` | |
 
 ## Events
 
-Use Capacitor listeners with the exported event enum:
-
-- `initialized`
-- `failed`
-- `bannerLoaded`
-- `bannerFailed`
-- `bannerClicked`
-- `bannerShown`
-- `bannerHidden`
-- `interstitialLoaded`
-- `interstitialFailed`
-- `interstitialOpened`
-- `interstitialClosed`
-- `rewardedLoaded`
-- `rewardedFailed`
-- `rewardedOpened`
-- `rewardedClosed`
-- `rewardedCompleted`
-- `rewardedRewardGranted`
-
-### Listener example
+`initialized`, `failed`, `interstitialLoaded|Failed|Opened|Closed`, `rewardedLoaded|Failed|Opened|Closed`,
+`rewardedCompleted`, `rewardedRewardGranted`, `bannerLoaded|Failed|Shown|Hidden|Clicked`.
+Payload: `{ placementId?, message?, code? }`.
 
 ```ts
-import { UnityLevelPlay, UnityLevelPlayEventName } from "@rehovottech/capacitor-unity-levelplay";
-
-const handle = await UnityLevelPlay.addListener(
-  UnityLevelPlayEventName.Initialized,
-  (event) => {
-    console.log("Unity LevelPlay initialized", event);
-  },
-);
-
-await handle.remove();
+const handle = await CapacitorAds.addListener("rewardedRewardGranted", (e) => console.log(e.placementId));
 ```
 
-The event names are defined now, but native `notifyListeners(...)` calls are intentionally left as TODO placeholders until SDK integration is added.
+## Native layout
 
-## Example usage
+- `ios/Plugin/` (Swift): `UnityLevelPlayPlugin.swift` is the bridge. `UnityLevelPlay.swift` holds the facade and the shared full-screen state machine. Each format has its own manager.
+- `android/src/main/java/com/rehovottech/levelplay/` (Java), same structure. The old `.kt` stubs are now empty and can be deleted.
 
-```ts
-import { UnityLevelPlay } from "@rehovottech/capacitor-unity-levelplay";
+## Unity SDK note
 
-await UnityLevelPlay.initialize({
-  appKey: "your-app-key",
-  testMode: true,
-  debug: true,
-});
-
-await UnityLevelPlay.setUserId({ userId: "player-123" });
-await UnityLevelPlay.setCOPPA({ enabled: false });
-
-await UnityLevelPlay.showBanner({
-  placementId: "banner-home",
-});
-
-const rewardedResult = await UnityLevelPlay.showRewarded({
-  placementId: "rewarded-video",
-});
-
-if (rewardedResult.rewardGranted) {
-  // Grant the in-app reward here.
-}
-```
-
-## Development status
-
-The native files are architecture only.
-
-TODO placeholders are present for:
-
-- Unity LevelPlay initialization
-- Banner loading and display
-- Interstitial loading and display
-- Rewarded loading and display
-- Consent and user metadata propagation
-- Future SDK switching logic
-
-## Platform support
-
-- Android
-- iOS
-- Web fallback stub for Ionic React development
-
-## Native notes
-
-The package is organized so native implementation can later be swapped or expanded for:
-
-- Unity Ads
-- Unity LevelPlay
-- AppLovin
-- Chartboost
-- AdMob
-- Pangle
-- InMobi
-- Liftoff
-
-without changing the public TypeScript API.
+Unity deprecated the classic `UnityAds.load` / `UnityAds.show` API in 4.19 and removes it in **5.0**.
+The plugin uses the classic API and pins the 4.x range: Android uses `4.20.1` and the iOS pod is `~> 4.20`.
+Before moving to Unity Ads 5, port the full-screen managers to `InterstitialAd` and `RewardedAd`. The JavaScript API stays the same.

@@ -1,32 +1,43 @@
-apply plugin: 'com.android.library'
-apply plugin: 'kotlin-android'
+ext {
+    unityAdsVersion = project.hasProperty('unityAdsVersion') ? rootProject.ext.unityAdsVersion : '4.20.1'
+}
 
-// The Android module is a Capacitor plugin shell with no SDK implementation yet.
-def capacitorVersion = rootProject.ext.has('capacitorVersion') ? rootProject.ext.capacitorVersion : '7.0.0'
-def compileSdkVersionValue = rootProject.ext.has('compileSdkVersion') ? rootProject.ext.compileSdkVersion : 34
-def minSdkVersionValue = rootProject.ext.has('minSdkVersion') ? rootProject.ext.minSdkVersion : 23
-def targetSdkVersionValue = rootProject.ext.has('targetSdkVersion') ? rootProject.ext.targetSdkVersion : 34
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.13.0'
+    }
+}
+
+apply plugin: 'com.android.library'
 
 android {
     namespace "com.rehovottech.capacitorads"
-    compileSdk compileSdkVersionValue
+    compileSdk project.hasProperty('compileSdkVersion') ? rootProject.ext.compileSdkVersion : 36
 
     defaultConfig {
-        minSdk minSdkVersionValue
-        targetSdk targetSdkVersionValue
+        minSdkVersion project.hasProperty('minSdkVersion') ? rootProject.ext.minSdkVersion : 24
+        targetSdkVersion project.hasProperty('targetSdkVersion') ? rootProject.ext.targetSdkVersion : 36
         consumerProguardFiles 'proguard-rules.pro'
     }
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_21
+        targetCompatibility JavaVersion.VERSION_21
     }
 
-    kotlinOptions {
-        jvmTarget = '17'
-    }
+}
+
+repositories {
+    google()
+    mavenCentral()
 }
 
 dependencies {
-    compileOnly "com.getcapacitor:capacitor-android:$capacitorVersion"
+    implementation project(':capacitor-android')
+    // Unity Ads SDK. Keep in step with the UnityAds pod in CapacitorAds.podspec.
+    implementation "com.unity3d.ads:unity-ads:$unityAdsVersion"
 }
