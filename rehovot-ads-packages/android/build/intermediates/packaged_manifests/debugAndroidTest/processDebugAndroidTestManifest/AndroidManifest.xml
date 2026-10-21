@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.rehovottech.capacitorads.test" >
+
+    <uses-sdk
+        android:minSdkVersion="24"
+        android:targetSdkVersion="36" />
+
+    <instrumentation
+        android:name="android.test.InstrumentationTestRunner"
+        android:functionalTest="false"
+        android:handleProfiling="false"
+        android:label="Tests for com.rehovottech.capacitorads.test"
+        android:targetPackage="com.rehovottech.capacitorads.test" />
+    <!-- LevelPlay and the network adapters need network access; their own manifests add the rest (AD_ID, activities). -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_ADSERVICES_ATTRIBUTION" />
+
+    <permission
+        android:name="com.rehovottech.capacitorads.test.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+        android:protectionLevel="signature" />
+
+    <uses-permission android:name="com.rehovottech.capacitorads.test.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+
+    <application
+        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+        android:debuggable="true"
+        android:extractNativeLibs="false" >
+        <uses-library android:name="android.test.runner" />
+
+        <activity
+            android:name="com.ironsource.sdk.controller.ControllerActivity"
+            android:configChanges="orientation|screenSize"
+            android:hardwareAccelerated="true"
+            android:theme="@android:style/Theme.NoTitleBar" />
+        <activity
+            android:name="com.ironsource.sdk.controller.InterstitialActivity"
+            android:configChanges="orientation|screenSize"
+            android:hardwareAccelerated="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name="com.ironsource.sdk.controller.OpenUrlActivity"
+            android:configChanges="orientation|screenSize"
+            android:hardwareAccelerated="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name="com.unity3d.ironsourceads.internal.services.InlineStoreActivity"
+            android:configChanges="orientation|screenSize"
+            android:hardwareAccelerated="true"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+        <activity
+            android:name="com.ironsource.mediationsdk.testSuite.TestSuiteActivity"
+            android:configChanges="orientation|screenSize"
+            android:exported="false"
+            android:hardwareAccelerated="true"
+            android:theme="@android:style/Theme.NoTitleBar" >
+            <meta-data
+                android:name="android.webkit.WebView.EnableSafeBrowsing"
+                android:value="true" />
+        </activity>
+
+        <provider
+            android:name="com.ironsource.lifecycle.IronsourceLifecycleProvider"
+            android:authorities="com.rehovottech.capacitorads.test.IronsourceLifecycleProvider"
+            android:exported="false" />
+        <provider
+            android:name="com.ironsource.lifecycle.LevelPlayActivityLifecycleProvider"
+            android:authorities="com.rehovottech.capacitorads.test.LevelPlayActivityLifecycleProvider"
+            android:exported="false" />
+        <provider
+            android:name="androidx.startup.InitializationProvider"
+            android:authorities="com.rehovottech.capacitorads.test.androidx-startup"
+            android:exported="false" >
+            <meta-data
+                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+                android:value="androidx.startup" />
+            <meta-data
+                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+                android:value="androidx.startup" />
+            <meta-data
+                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+                android:value="androidx.startup" />
+        </provider>
+
+        <receiver
+            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+            android:directBootAware="false"
+            android:enabled="true"
+            android:exported="true"
+            android:permission="android.permission.DUMP" >
+            <intent-filter>
+                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+            </intent-filter>
+        </receiver>
+    </application>
+
+</manifest>

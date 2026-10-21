@@ -1,12 +1,12 @@
 import Foundation
 import UIKit
-import UnityAds
+import IronSource
 
-// Banner format: a 320x50 Unity banner pinned to the top or bottom safe area of the web view.
-final class BannerManager: NSObject, UADSBannerViewDelegate {
+// Banner format: a 320x50 LevelPlay banner pinned to the top or bottom safe area of the web view.
+final class BannerManager: NSObject, LPMBannerAdViewDelegate {
     private let logger: Logger
     weak var events: AdsEventSink?
-    private var bannerView: UADSBannerView?
+    private var bannerView: LPMBannerAdView?
     private var placementId: String?
 
     init(logger: Logger) {
@@ -14,16 +14,17 @@ final class BannerManager: NSObject, UADSBannerViewDelegate {
         super.init()
     }
 
-    func show(_ request: BannerRequest, placementId: String, in container: UIView?) {
-        guard let container = container else { return }
+    func show(_ request: BannerRequest, placementId: String, from viewController: UIViewController?) {
+        guard let viewController = viewController, let container = viewController.view else { return }
         if let existing = bannerView, self.placementId == placementId {
             existing.isHidden = false
             events?.emit("bannerShown", ["placementId": placementId])
             return
         }
         destroy()
-        let view = UADSBannerView(placementId: placementId, size: CGSize(width: 320, height: 50))
-        view.delegate = self
+        let config = LPMBannerAdViewConfigBuilder().set(adSize: LPMAdSize.banner()).build()
+        let view = LPMBannerAdView(adUnitId: placementId, config: config)
+        view.setDelegate(self)
         view.translatesAutoresizingMaskIntoConstraints = false
         container.addSubview(view)
         let guide = container.safeAreaLayoutGuide
@@ -41,7 +42,7 @@ final class BannerManager: NSObject, UADSBannerViewDelegate {
         bannerView = view
         self.placementId = placementId
         logger.debug("load \(request)")
-        view.load()
+        view.loadAd(with: viewController)
     }
 
     func hide() {
@@ -50,24 +51,24 @@ final class BannerManager: NSObject, UADSBannerViewDelegate {
     }
 
     func destroy() {
-        bannerView?.delegate = nil
+        bannerView?.destroy()
         bannerView?.removeFromSuperview()
         bannerView = nil
         placementId = nil
     }
 
-    // MARK: UADSBannerViewDelegate
+    // MARK: LPMBannerAdViewDelegate
 
-    func bannerViewDidLoad(_ bannerView: UADSBannerView!) {
-        events?.emit("bannerLoaded", ["placementId": bannerView.placementId ?? ""])
-        events?.emit("bannerShown", ["placementId": bannerView.placementId ?? ""])
+    func didLoadAd(with adInfo: LPMAdInfo) {
+        events?.emit("bannerLoaded", ["placementId": adInfo.adUnitId])
+        events?.emit("bannerShown", ["placementId": adInfo.adUnitId])
     }
 
-    func bannerViewDidError(_ bannerView: UADSBannerView!, error: UADSBannerError!) {
-        events?.emit("bannerFailed", ["placementId": bannerView.placementId ?? "", "message": error?.localizedDescription ?? "Banner failed."])
+    func didFailToLoadAd(withAdUnitId adUnitId: String, error: Error) {
+        events?.emit("bannerFailed", ["placementId": adUnitId, "message": error.localizedDescription])
     }
 
-    func bannerViewDidClick(_ bannerView: UADSBannerView!) {
-        events?.emit("bannerClicked", ["placementId": bannerView.placementId ?? ""])
+    func didClickAd(with adInfo: LPMAdInfo) {
+        events?.emit("bannerClicked", ["placementId": adInfo.adUnitId])
     }
 }

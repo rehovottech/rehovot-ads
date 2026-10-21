@@ -1,10 +1,10 @@
 # @rehovottech/capacitor-ads
 
 Reusable Capacitor 8 ad bridge for Rehovot games.
-Native backend: **Unity Ads SDK 4.20** (interstitial, rewarded, banner) on Android and iOS, with a silent web fallback.
+Native backend: **Unity LevelPlay mediation SDK 9.x** (interstitial, rewarded, banner) on Android and iOS, with a silent web fallback.
 
-The JavaScript contract (`src/definitions.ts`) is provider-neutral, so the native backend can later move to
-Unity LevelPlay mediation (or another network) without changing game code.
+The plugin ships only the mediation SDK. Each game picks its ad networks by adding LevelPlay adapters
+(e.g. Unity Ads + AdMob) to its own native projects. The JavaScript contract (`src/definitions.ts`) is provider-neutral.
 
 ## Install
 
@@ -13,9 +13,15 @@ npm install file:../../plugins/rehovot-ads/rehovot-ads-packages   # from a game 
 npx cap sync
 ```
 
-- **iOS** pulls the `UnityAds` pod (CocoaPods). Xcode 26+ is required by Unity Ads 4.18+.
-  Add `NSUserTrackingUsageDescription` and Unity's `SKAdNetworkItems` to the app's `Info.plist`.
-- **Android** pulls `com.unity3d.ads:unity-ads:4.20.1`. Override with `unityAdsVersion` in `variables.gradle`.
+- **iOS** pulls `IronSourceSDK/Ads ~> 9.6` (CocoaPods). The game's Podfile needs `use_frameworks! :linkage => :static`
+  and the adapters it wants, e.g. `pod 'IronSourceUnityAdsAdapter'`, `pod 'IronSourceAdMobAdapter'`.
+  `Info.plist` needs `NSUserTrackingUsageDescription`, the `SKAdNetworkItems` list from LevelPlay and, with AdMob,
+  `GADApplicationIdentifier`.
+- **Android** pulls `com.unity3d.ads-mediation:mediation-sdk:9.6.1`. Override with `levelPlayVersion` in `variables.gradle`.
+  The game's `app/build.gradle` adds the adapters, e.g. `com.unity3d.ads-mediation:unityads-adapter` and `admob-adapter`.
+  With AdMob, the Android AdMob App ID is entered in the LevelPlay dashboard.
+
+Full walkthrough (dashboard, IDs, testing, release): `turns/exclude/doc/levelplay-ads-setup.md`.
 
 ## Usage
 
@@ -26,9 +32,9 @@ await CapacitorAds.setConsent({ gdprConsent: true, doNotSell: false });
 await CapacitorAds.requestTracking();                // iOS ATT prompt; "unavailable" elsewhere
 
 await CapacitorAds.initialize({
-  appKey: "1234567",                                 // Unity Game ID for this platform
+  appKey: "1f2e3d4c5",                               // LevelPlay App Key for this platform
   testMode: true,
-  placements: { interstitial: "Interstitial_Android", rewarded: "Rewarded_Android" },
+  placements: { interstitial: "<ad unit id>", rewarded: "<ad unit id>" },
 });                                                   // autoStart (default) preloads both formats
 
 if ((await CapacitorAds.isRewardedReady()).value) {
@@ -55,6 +61,7 @@ After each show the plugin reloads that placement automatically. Failed loads re
 | `showBanner({ placementId?, position })`, `hideBanner()`, `destroyBanner()` | 320×50, top or bottom safe area |
 | `setConsent({ gdprConsent?, doNotSell?, childDirected? })` | Unity metadata `gdpr.consent`, `privacy.consent`, `user.nonbehavioral` |
 | `requestTracking()` | iOS 14+ App Tracking Transparency |
+| `openTestSuite()` | LevelPlay Test Suite (needs `testMode: true`) |
 | `destroy()` | |
 
 ## Events
@@ -72,8 +79,13 @@ const handle = await CapacitorAds.addListener("rewardedRewardGranted", (e) => co
 - `ios/Plugin/` (Swift): `UnityLevelPlayPlugin.swift` is the bridge. `UnityLevelPlay.swift` holds the facade and the shared full-screen state machine. Each format has its own manager.
 - `android/src/main/java/com/rehovottech/levelplay/` (Java), same structure. The old `.kt` stubs are now empty and can be deleted.
 
-## Unity SDK note
+## LevelPlay notes
 
-Unity deprecated the classic `UnityAds.load` / `UnityAds.show` API in 4.19 and removes it in **5.0**.
-The plugin uses the classic API and pins the 4.x range: Android uses `4.20.1` and the iOS pod is `~> 4.20`.
-Before moving to Unity Ads 5, port the full-screen managers to `InterstitialAd` and `RewardedAd`. The JavaScript API stays the same.
+- `appKey` is the LevelPlay **App Key**. Placement ids passed to `placements` / `placementId` are LevelPlay **ad unit ids**.
+- One `LevelPlayInterstitialAd` / `LevelPlayRewardedAd` (iOS `LPMInterstitialAd` / `LPMRewardedAd`) is kept per ad unit and
+  reloaded after each show.
+- `showRewarded` resolves `completed: true` only when `onAdRewarded` / `didRewardAd` fired. That callback may arrive just
+  after close, so the plugin waits 500 ms for it.
+- `setConsent` maps to `LevelPlayPrivacySettings` (GDPR, CCPA, COPPA). Call it before `initialize`.
+- `testMode: true` enables the LevelPlay Test Suite (`openTestSuite()`). Test ads come from registering devices under
+  LevelPlay > Setup > Test devices.

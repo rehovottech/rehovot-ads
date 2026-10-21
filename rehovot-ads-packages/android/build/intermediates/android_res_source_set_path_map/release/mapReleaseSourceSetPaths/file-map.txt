@@ -1,0 +1,10 @@
+com.rehovottech.capacitorads.rehovottech-capacitor-ads-pngs-0 /Volumes/T7/Work/Office/plugins/rehovot-ads/rehovot-ads-packages/android/build/generated/res/pngs/release
+com.rehovottech.capacitorads.rehovottech-capacitor-ads-resValues-1 /Volumes/T7/Work/Office/plugins/rehovot-ads/rehovot-ads-packages/android/build/generated/res/resValues/release
+com.rehovottech.capacitorads.rehovottech-capacitor-ads-updated_navigation_xml-2 /Volumes/T7/Work/Office/plugins/rehovot-ads/rehovot-ads-packages/android/build/generated/updated_navigation_xml/release
+com.rehovottech.capacitorads.rehovottech-capacitor-ads-mergeReleaseResources-3 /Volumes/T7/Work/Office/plugins/rehovot-ads/rehovot-ads-packages/android/build/intermediates/incremental/release/mergeReleaseResources/merged.dir
+com.rehovottech.capacitorads.rehovottech-capacitor-ads-mergeReleaseResources-4 /Volumes/T7/Work/Office/plugins/rehovot-ads/rehovot-ads-packages/android/build/intermediates/incremental/release/mergeReleaseResources/stripped.dir
+com.rehovottech.capacitorads.rehovottech-capacitor-ads-release-5 /Volumes/T7/Work/Office/plugins/rehovot-ads/rehovot-ads-packages/android/build/intermediates/merged_res/release/mergeReleaseResources
+com.rehovottech.capacitorads.rehovottech-capacitor-ads-release-6 /Volumes/T7/Work/Office/plugins/rehovot-ads/rehovot-ads-packages/android/build/intermediates/packaged_res/release/packageReleaseResources
+com.rehovottech.capacitorads.rehovottech-capacitor-ads-main-7 /Volumes/T7/Work/Office/plugins/rehovot-ads/rehovot-ads-packages/android/src/main/res
+com.rehovottech.capacitorads.rehovottech-capacitor-ads-release-8 /Volumes/T7/Work/Office/plugins/rehovot-ads/rehovot-ads-packages/android/src/release/res
+gradleHome-0 /Users/simeonaron/.gradle

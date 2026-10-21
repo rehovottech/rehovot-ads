@@ -1,8 +1,8 @@
 import Foundation
-import UnityAds
+import IronSource
 
-// Privacy choices are forwarded to the Unity Ads SDK as metadata.
-// Docs: https://docs.unity.com/en-us/grow/ads/privacy (gdpr.consent, privacy.consent, user.nonbehavioral)
+// Privacy choices go to LevelPlay, which forwards them to every mediated network.
+// Set them before initialize(); later calls apply to the next ad requests.
 final class ConsentManager {
     private let logger: Logger
 
@@ -12,21 +12,9 @@ final class ConsentManager {
 
     func setConsent(_ options: ConsentRequest) {
         logger.debug("setConsent \(options)")
-        if let gdpr = options.gdprConsent {
-            commit("gdpr.consent", gdpr)
-        }
-        if let doNotSell = options.doNotSell {
-            // Unity expects "privacy.consent" = true when the user ALLOWS the sale of data.
-            commit("privacy.consent", !doNotSell)
-        }
-        if let child = options.childDirected {
-            commit("user.nonbehavioral", child)
-        }
-    }
-
-    private func commit(_ key: String, _ value: Bool) {
-        let metadata = UADSMetaData()
-        metadata.set(key, value: value)
-        metadata.commit()
+        if let gdpr = options.gdprConsent { LPMPrivacySettings.setGDPRConsent(gdpr) }
+        // CCPA: true = the user opted OUT of the sale of personal data.
+        if let doNotSell = options.doNotSell { LPMPrivacySettings.setCCPA(doNotSell) }
+        if let child = options.childDirected { LPMPrivacySettings.setCOPPA(child) }
     }
 }

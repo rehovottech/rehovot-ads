@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Unity Ads needs network access; its own manifest adds the rest (AD_ID, activities). -->
+    <!-- LevelPlay and the network adapters need network access; their own manifests add the rest (AD_ID, activities). -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 </manifest>

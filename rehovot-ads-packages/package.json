@@ -1,7 +1,7 @@
 {
   "name": "@rehovottech/capacitor-ads",
-  "version": "0.2.0",
-  "description": "Reusable Capacitor ad bridge for Rehovot games. Native backend: Unity Ads SDK (interstitial, rewarded, banner).",
+  "version": "0.3.0",
+  "description": "Reusable Capacitor ad bridge for Rehovot games. Native backend: Unity LevelPlay mediation (interstitial, rewarded, banner).",
   "type": "module",
   "main": "src/index.ts",
   "module": "src/index.ts",
@@ -12,7 +12,7 @@
     "src",
     "dist",
     "README.md",
-    "CapacitorAds.podspec"
+    "RehovottechCapacitorAds.podspec"
   ],
   "scripts": {
     "build": "rollup -c rollup.config.mjs && tsc -p tsconfig.json --emitDeclarationOnly --declarationDir dist/types",

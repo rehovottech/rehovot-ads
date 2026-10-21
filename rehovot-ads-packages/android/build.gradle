@@ -1,5 +1,6 @@
 ext {
-    unityAdsVersion = project.hasProperty('unityAdsVersion') ? rootProject.ext.unityAdsVersion : '4.20.1'
+    levelPlayVersion = rootProject.ext.has('levelPlayVersion') ? rootProject.ext.levelPlayVersion : '9.6.1'
+    androidxAppCompatVersion = rootProject.ext.has('androidxAppCompatVersion') ? rootProject.ext.androidxAppCompatVersion : '1.7.1'
 }
 
 buildscript {
@@ -38,6 +39,8 @@ repositories {
 
 dependencies {
     implementation project(':capacitor-android')
-    // Unity Ads SDK. Keep in step with the UnityAds pod in CapacitorAds.podspec.
-    implementation "com.unity3d.ads:unity-ads:$unityAdsVersion"
+    implementation "androidx.appcompat:appcompat:$androidxAppCompatVersion"
+    // Unity LevelPlay mediation SDK. Keep in step with the IronSourceSDK pod in RehovottechCapacitorAds.podspec.
+    // Network adapters (unityads-adapter, admob-adapter, ...) go in each game's app/build.gradle.
+    implementation "com.unity3d.ads-mediation:mediation-sdk:$levelPlayVersion"
 }

@@ -173,7 +173,7 @@ public class UnityLevelPlayPlugin extends Plugin {
         request.gdprConsent = call.getBoolean("gdprConsent");
         request.doNotSell = call.getBoolean("doNotSell");
         request.childDirected = call.getBoolean("childDirected");
-        ads.consent.setConsent(getContext(), request);
+        ads.consent.setConsent(request);
         call.resolve();
     }
 
@@ -182,6 +182,14 @@ public class UnityLevelPlayPlugin extends Plugin {
         JSObject ret = new JSObject();
         ret.put("status", "unavailable");
         call.resolve(ret);
+    }
+
+    @PluginMethod
+    public void openTestSuite(final PluginCall call) {
+        onMain(() -> {
+            ads.openTestSuite(getActivity());
+            call.resolve();
+        });
     }
 
     @PluginMethod

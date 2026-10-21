@@ -5,16 +5,17 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import com.unity3d.services.banners.BannerErrorInfo;
-import com.unity3d.services.banners.BannerView;
-import com.unity3d.services.banners.UnityBannerSize;
+import com.unity3d.mediation.LevelPlayAdError;
+import com.unity3d.mediation.LevelPlayAdInfo;
+import com.unity3d.mediation.LevelPlayAdSize;
+import com.unity3d.mediation.banner.LevelPlayBannerAdView;
+import com.unity3d.mediation.banner.LevelPlayBannerAdViewListener;
 
-/** Banner format: a 320x50 Unity banner pinned to the top or bottom of the activity. Main thread only. */
-@SuppressWarnings("deprecation")
+/** Banner format: a 320x50 LevelPlay banner pinned to the top or bottom of the activity. Main thread only. */
 final class BannerManager {
     private final Logger logger;
     UnityEvents.Sink events;
-    private BannerView bannerView;
+    private LevelPlayBannerAdView bannerView;
     private String placementId;
 
     BannerManager(Logger logger) {
@@ -28,37 +29,31 @@ final class BannerManager {
             return;
         }
         destroy();
-        BannerView view = new BannerView(activity, placementId, new UnityBannerSize(320, 50));
-        view.setListener(new BannerView.IListener() {
+        LevelPlayBannerAdView.Config config = new LevelPlayBannerAdView.Config.Builder().setAdSize(LevelPlayAdSize.BANNER).build();
+        final LevelPlayBannerAdView view = new LevelPlayBannerAdView(activity, placementId, config);
+        view.setBannerListener(new LevelPlayBannerAdViewListener() {
             @Override
-            public void onBannerLoaded(BannerView banner) {
-                emit(UnityEvents.BANNER_LOADED, banner.getPlacementId(), null);
+            public void onAdLoaded(LevelPlayAdInfo info) {
+                emit(UnityEvents.BANNER_LOADED, view.getAdUnitId(), null);
+                emit(UnityEvents.BANNER_SHOWN, view.getAdUnitId(), null);
             }
 
             @Override
-            public void onBannerShown(BannerView banner) {
-                emit(UnityEvents.BANNER_SHOWN, banner.getPlacementId(), null);
+            public void onAdLoadFailed(LevelPlayAdError error) {
+                emit(UnityEvents.BANNER_FAILED, view.getAdUnitId(), error != null ? error.getErrorMessage() : "Banner failed.");
             }
 
             @Override
-            public void onBannerClick(BannerView banner) {
-                emit(UnityEvents.BANNER_CLICKED, banner.getPlacementId(), null);
+            public void onAdClicked(LevelPlayAdInfo info) {
+                emit(UnityEvents.BANNER_CLICKED, view.getAdUnitId(), null);
             }
-
-            @Override
-            public void onBannerFailedToLoad(BannerView banner, BannerErrorInfo errorInfo) {
-                emit(UnityEvents.BANNER_FAILED, banner.getPlacementId(), errorInfo != null ? errorInfo.errorMessage : "Banner failed.");
-            }
-
-            @Override
-            public void onBannerLeftApplication(BannerView banner) {}
         });
         int gravity = ("top".equals(position) ? Gravity.TOP : Gravity.BOTTOM) | Gravity.CENTER_HORIZONTAL;
         activity.addContentView(view, new FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, gravity));
         bannerView = view;
         this.placementId = placementId;
         logger.debug("load banner " + placementId + " (" + position + ")");
-        view.load();
+        view.loadAd();
     }
 
     void hide() {

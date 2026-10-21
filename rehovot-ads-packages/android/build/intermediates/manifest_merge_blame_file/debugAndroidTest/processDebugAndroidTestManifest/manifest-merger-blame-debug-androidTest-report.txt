@@ -1,0 +1,199 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.rehovottech.capacitorads.test" >
+4
+5    <uses-sdk
+5-->/Volumes/T7/Work/Office/plugins/rehovot-ads/rehovot-ads-packages/android/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest3683973149939025366.xml:5:5-74
+6        android:minSdkVersion="24"
+6-->/Volumes/T7/Work/Office/plugins/rehovot-ads/rehovot-ads-packages/android/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest3683973149939025366.xml:5:15-41
+7        android:targetSdkVersion="36" />
+7-->/Volumes/T7/Work/Office/plugins/rehovot-ads/rehovot-ads-packages/android/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest3683973149939025366.xml:5:42-71
+8
+9    <instrumentation
+9-->/Volumes/T7/Work/Office/plugins/rehovot-ads/rehovot-ads-packages/android/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest3683973149939025366.xml:11:5-15:83
+10        android:name="android.test.InstrumentationTestRunner"
+10-->/Volumes/T7/Work/Office/plugins/rehovot-ads/rehovot-ads-packages/android/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest3683973149939025366.xml:11:22-75
+11        android:functionalTest="false"
+11-->/Volumes/T7/Work/Office/plugins/rehovot-ads/rehovot-ads-packages/android/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest3683973149939025366.xml:14:22-52
+12        android:handleProfiling="false"
+12-->/Volumes/T7/Work/Office/plugins/rehovot-ads/rehovot-ads-packages/android/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest3683973149939025366.xml:13:22-53
+13        android:label="Tests for com.rehovottech.capacitorads.test"
+13-->/Volumes/T7/Work/Office/plugins/rehovot-ads/rehovot-ads-packages/android/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest3683973149939025366.xml:15:22-81
+14        android:targetPackage="com.rehovottech.capacitorads.test" />
+14-->/Volumes/T7/Work/Office/plugins/rehovot-ads/rehovot-ads-packages/android/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest3683973149939025366.xml:12:22-79
+15    <!-- LevelPlay and the network adapters need network access; their own manifests add the rest (AD_ID, activities). -->
+16    <uses-permission android:name="android.permission.INTERNET" />
+16-->[:rehovottech-capacitor-ads] /Volumes/T7/Work/Office/plugins/rehovot-ads/rehovot-ads-packages/android/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:7:5-67
+16-->[:rehovottech-capacitor-ads] /Volumes/T7/Work/Office/plugins/rehovot-ads/rehovot-ads-packages/android/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:7:22-64
+17    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+17-->[:rehovottech-capacitor-ads] /Volumes/T7/Work/Office/plugins/rehovot-ads/rehovot-ads-packages/android/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:8:5-79
+17-->[:rehovottech-capacitor-ads] /Volumes/T7/Work/Office/plugins/rehovot-ads/rehovot-ads-packages/android/build/intermediates/merged_manifest/debug/processDebugManifest/AndroidManifest.xml:8:22-76
+18    <uses-permission android:name="android.permission.ACCESS_ADSERVICES_ATTRIBUTION" />
+18-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:9:5-88
+18-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:9:22-85
+19
+20    <permission
+20-->[androidx.core:core:1.17.0] /Users/simeonaron/.gradle/caches/8.14.5/transforms/57dd49bba92262db901de74f5b95a446/transformed/core-1.17.0/AndroidManifest.xml:22:5-24:47
+21        android:name="com.rehovottech.capacitorads.test.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+21-->[androidx.core:core:1.17.0] /Users/simeonaron/.gradle/caches/8.14.5/transforms/57dd49bba92262db901de74f5b95a446/transformed/core-1.17.0/AndroidManifest.xml:23:9-81
+22        android:protectionLevel="signature" />
+22-->[androidx.core:core:1.17.0] /Users/simeonaron/.gradle/caches/8.14.5/transforms/57dd49bba92262db901de74f5b95a446/transformed/core-1.17.0/AndroidManifest.xml:24:9-44
+23
+24    <uses-permission android:name="com.rehovottech.capacitorads.test.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+24-->[androidx.core:core:1.17.0] /Users/simeonaron/.gradle/caches/8.14.5/transforms/57dd49bba92262db901de74f5b95a446/transformed/core-1.17.0/AndroidManifest.xml:26:5-97
+24-->[androidx.core:core:1.17.0] /Users/simeonaron/.gradle/caches/8.14.5/transforms/57dd49bba92262db901de74f5b95a446/transformed/core-1.17.0/AndroidManifest.xml:26:22-94
+25
+26    <application
+26-->/Volumes/T7/Work/Office/plugins/rehovot-ads/rehovot-ads-packages/android/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest3683973149939025366.xml:7:5-9:19
+27        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+27-->[androidx.core:core:1.17.0] /Users/simeonaron/.gradle/caches/8.14.5/transforms/57dd49bba92262db901de74f5b95a446/transformed/core-1.17.0/AndroidManifest.xml:28:18-86
+28        android:debuggable="true"
+29        android:extractNativeLibs="false" >
+30        <uses-library android:name="android.test.runner" />
+30-->/Volumes/T7/Work/Office/plugins/rehovot-ads/rehovot-ads-packages/android/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest3683973149939025366.xml:8:9-60
+30-->/Volumes/T7/Work/Office/plugins/rehovot-ads/rehovot-ads-packages/android/build/intermediates/tmp/manifest/androidTest/debug/tempFile1ProcessTestManifest3683973149939025366.xml:8:23-57
+31
+32        <activity
+32-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:12:9-16:63
+33            android:name="com.ironsource.sdk.controller.ControllerActivity"
+33-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:13:13-76
+34            android:configChanges="orientation|screenSize"
+34-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:14:13-59
+35            android:hardwareAccelerated="true"
+35-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:15:13-47
+36            android:theme="@android:style/Theme.NoTitleBar" />
+36-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:16:13-60
+37        <activity
+37-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:17:9-21:75
+38            android:name="com.ironsource.sdk.controller.InterstitialActivity"
+38-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:18:13-78
+39            android:configChanges="orientation|screenSize"
+39-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:19:13-59
+40            android:hardwareAccelerated="true"
+40-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:20:13-47
+41            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+41-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:21:13-72
+42        <activity
+42-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:22:9-26:75
+43            android:name="com.ironsource.sdk.controller.OpenUrlActivity"
+43-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:23:13-73
+44            android:configChanges="orientation|screenSize"
+44-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:24:13-59
+45            android:hardwareAccelerated="true"
+45-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:25:13-47
+46            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+46-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:26:13-72
+47        <activity
+47-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:27:9-31:75
+48            android:name="com.unity3d.ironsourceads.internal.services.InlineStoreActivity"
+48-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:28:13-91
+49            android:configChanges="orientation|screenSize"
+49-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:29:13-59
+50            android:hardwareAccelerated="true"
+50-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:30:13-47
+51            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+51-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:31:13-72
+52        <activity
+52-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:32:9-41:20
+53            android:name="com.ironsource.mediationsdk.testSuite.TestSuiteActivity"
+53-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:33:13-83
+54            android:configChanges="orientation|screenSize"
+54-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:34:13-59
+55            android:exported="false"
+55-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:35:13-37
+56            android:hardwareAccelerated="true"
+56-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:36:13-47
+57            android:theme="@android:style/Theme.NoTitleBar" >
+57-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:37:13-60
+58            <meta-data
+58-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:38:13-40:40
+59                android:name="android.webkit.WebView.EnableSafeBrowsing"
+59-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:39:17-73
+60                android:value="true" />
+60-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:40:17-37
+61        </activity>
+62
+63        <provider
+63-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:43:9-46:40
+64            android:name="com.ironsource.lifecycle.IronsourceLifecycleProvider"
+64-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:44:13-80
+65            android:authorities="com.rehovottech.capacitorads.test.IronsourceLifecycleProvider"
+65-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:45:13-79
+66            android:exported="false" />
+66-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:46:13-37
+67        <provider
+67-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:47:9-50:40
+68            android:name="com.ironsource.lifecycle.LevelPlayActivityLifecycleProvider"
+68-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:48:13-87
+69            android:authorities="com.rehovottech.capacitorads.test.LevelPlayActivityLifecycleProvider"
+69-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:49:13-86
+70            android:exported="false" />
+70-->[com.unity3d.ads-mediation:mediation-sdk:9.6.1] /Users/simeonaron/.gradle/caches/8.14.5/transforms/f1b149b28727d902d1f36696bf9fcd04/transformed/mediation-sdk-9.6.1/AndroidManifest.xml:50:13-37
+71        <provider
+71-->[androidx.emoji2:emoji2:1.3.0] /Users/simeonaron/.gradle/caches/8.14.5/transforms/7a9b8b00f172bee1d666a586b5f43053/transformed/emoji2-1.3.0/AndroidManifest.xml:24:9-32:20
+72            android:name="androidx.startup.InitializationProvider"
+72-->[androidx.emoji2:emoji2:1.3.0] /Users/simeonaron/.gradle/caches/8.14.5/transforms/7a9b8b00f172bee1d666a586b5f43053/transformed/emoji2-1.3.0/AndroidManifest.xml:25:13-67
+73            android:authorities="com.rehovottech.capacitorads.test.androidx-startup"
+73-->[androidx.emoji2:emoji2:1.3.0] /Users/simeonaron/.gradle/caches/8.14.5/transforms/7a9b8b00f172bee1d666a586b5f43053/transformed/emoji2-1.3.0/AndroidManifest.xml:26:13-68
+74            android:exported="false" >
+74-->[androidx.emoji2:emoji2:1.3.0] /Users/simeonaron/.gradle/caches/8.14.5/transforms/7a9b8b00f172bee1d666a586b5f43053/transformed/emoji2-1.3.0/AndroidManifest.xml:27:13-37
+75            <meta-data
+75-->[androidx.emoji2:emoji2:1.3.0] /Users/simeonaron/.gradle/caches/8.14.5/transforms/7a9b8b00f172bee1d666a586b5f43053/transformed/emoji2-1.3.0/AndroidManifest.xml:29:13-31:52
+76                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+76-->[androidx.emoji2:emoji2:1.3.0] /Users/simeonaron/.gradle/caches/8.14.5/transforms/7a9b8b00f172bee1d666a586b5f43053/transformed/emoji2-1.3.0/AndroidManifest.xml:30:17-75
+77                android:value="androidx.startup" />
+77-->[androidx.emoji2:emoji2:1.3.0] /Users/simeonaron/.gradle/caches/8.14.5/transforms/7a9b8b00f172bee1d666a586b5f43053/transformed/emoji2-1.3.0/AndroidManifest.xml:31:17-49
+78            <meta-data
+78-->[androidx.lifecycle:lifecycle-process:2.6.2] /Users/simeonaron/.gradle/caches/8.14.5/transforms/872c89ec596e8ba940fde491f071042f/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:29:13-31:52
+79                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+79-->[androidx.lifecycle:lifecycle-process:2.6.2] /Users/simeonaron/.gradle/caches/8.14.5/transforms/872c89ec596e8ba940fde491f071042f/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:30:17-78
+80                android:value="androidx.startup" />
+80-->[androidx.lifecycle:lifecycle-process:2.6.2] /Users/simeonaron/.gradle/caches/8.14.5/transforms/872c89ec596e8ba940fde491f071042f/transformed/lifecycle-process-2.6.2/AndroidManifest.xml:31:17-49
+81            <meta-data
+81-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/simeonaron/.gradle/caches/8.14.5/transforms/b49e4bf4c27e9a27804a3ee6f4f06ef0/transformed/profileinstaller-1.4.0/AndroidManifest.xml:29:13-31:52
+82                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+82-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/simeonaron/.gradle/caches/8.14.5/transforms/b49e4bf4c27e9a27804a3ee6f4f06ef0/transformed/profileinstaller-1.4.0/AndroidManifest.xml:30:17-85
+83                android:value="androidx.startup" />
+83-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/simeonaron/.gradle/caches/8.14.5/transforms/b49e4bf4c27e9a27804a3ee6f4f06ef0/transformed/profileinstaller-1.4.0/AndroidManifest.xml:31:17-49
+84        </provider>
+85
+86        <receiver
+86-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/simeonaron/.gradle/caches/8.14.5/transforms/b49e4bf4c27e9a27804a3ee6f4f06ef0/transformed/profileinstaller-1.4.0/AndroidManifest.xml:34:9-52:20
+87            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+87-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/simeonaron/.gradle/caches/8.14.5/transforms/b49e4bf4c27e9a27804a3ee6f4f06ef0/transformed/profileinstaller-1.4.0/AndroidManifest.xml:35:13-76
+88            android:directBootAware="false"
+88-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/simeonaron/.gradle/caches/8.14.5/transforms/b49e4bf4c27e9a27804a3ee6f4f06ef0/transformed/profileinstaller-1.4.0/AndroidManifest.xml:36:13-44
+89            android:enabled="true"
+89-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/simeonaron/.gradle/caches/8.14.5/transforms/b49e4bf4c27e9a27804a3ee6f4f06ef0/transformed/profileinstaller-1.4.0/AndroidManifest.xml:37:13-35
+90            android:exported="true"
+90-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/simeonaron/.gradle/caches/8.14.5/transforms/b49e4bf4c27e9a27804a3ee6f4f06ef0/transformed/profileinstaller-1.4.0/AndroidManifest.xml:38:13-36
+91            android:permission="android.permission.DUMP" >
+91-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/simeonaron/.gradle/caches/8.14.5/transforms/b49e4bf4c27e9a27804a3ee6f4f06ef0/transformed/profileinstaller-1.4.0/AndroidManifest.xml:39:13-57
+92            <intent-filter>
+92-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/simeonaron/.gradle/caches/8.14.5/transforms/b49e4bf4c27e9a27804a3ee6f4f06ef0/transformed/profileinstaller-1.4.0/AndroidManifest.xml:40:13-42:29
+93                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+93-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/simeonaron/.gradle/caches/8.14.5/transforms/b49e4bf4c27e9a27804a3ee6f4f06ef0/transformed/profileinstaller-1.4.0/AndroidManifest.xml:41:17-91
+93-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/simeonaron/.gradle/caches/8.14.5/transforms/b49e4bf4c27e9a27804a3ee6f4f06ef0/transformed/profileinstaller-1.4.0/AndroidManifest.xml:41:25-88
+94            </intent-filter>
+95            <intent-filter>
+95-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/simeonaron/.gradle/caches/8.14.5/transforms/b49e4bf4c27e9a27804a3ee6f4f06ef0/transformed/profileinstaller-1.4.0/AndroidManifest.xml:43:13-45:29
+96                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+96-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/simeonaron/.gradle/caches/8.14.5/transforms/b49e4bf4c27e9a27804a3ee6f4f06ef0/transformed/profileinstaller-1.4.0/AndroidManifest.xml:44:17-85
+96-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/simeonaron/.gradle/caches/8.14.5/transforms/b49e4bf4c27e9a27804a3ee6f4f06ef0/transformed/profileinstaller-1.4.0/AndroidManifest.xml:44:25-82
+97            </intent-filter>
+98            <intent-filter>
+98-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/simeonaron/.gradle/caches/8.14.5/transforms/b49e4bf4c27e9a27804a3ee6f4f06ef0/transformed/profileinstaller-1.4.0/AndroidManifest.xml:46:13-48:29
+99                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+99-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/simeonaron/.gradle/caches/8.14.5/transforms/b49e4bf4c27e9a27804a3ee6f4f06ef0/transformed/profileinstaller-1.4.0/AndroidManifest.xml:47:17-88
+99-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/simeonaron/.gradle/caches/8.14.5/transforms/b49e4bf4c27e9a27804a3ee6f4f06ef0/transformed/profileinstaller-1.4.0/AndroidManifest.xml:47:25-85
+100            </intent-filter>
+101            <intent-filter>
+101-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/simeonaron/.gradle/caches/8.14.5/transforms/b49e4bf4c27e9a27804a3ee6f4f06ef0/transformed/profileinstaller-1.4.0/AndroidManifest.xml:49:13-51:29
+102                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+102-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/simeonaron/.gradle/caches/8.14.5/transforms/b49e4bf4c27e9a27804a3ee6f4f06ef0/transformed/profileinstaller-1.4.0/AndroidManifest.xml:50:17-95
+102-->[androidx.profileinstaller:profileinstaller:1.4.0] /Users/simeonaron/.gradle/caches/8.14.5/transforms/b49e4bf4c27e9a27804a3ee6f4f06ef0/transformed/profileinstaller-1.4.0/AndroidManifest.xml:50:25-92
+103            </intent-filter>
+104        </receiver>
+105    </application>
+106
+107</manifest>

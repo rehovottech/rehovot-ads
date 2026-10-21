@@ -1,0 +1,16 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.rehovottech.capacitorads" >
+4
+5    <uses-sdk android:minSdkVersion="24" />
+5-->INJECTED
+5-->INJECTED
+6    <!-- LevelPlay and the network adapters need network access; their own manifests add the rest (AD_ID, activities). -->
+7    <uses-permission android:name="android.permission.INTERNET" />
+7-->/Volumes/T7/Work/Office/plugins/rehovot-ads/rehovot-ads-packages/android/src/main/AndroidManifest.xml:3:5-67
+7-->/Volumes/T7/Work/Office/plugins/rehovot-ads/rehovot-ads-packages/android/src/main/AndroidManifest.xml:3:22-64
+8    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+8-->/Volumes/T7/Work/Office/plugins/rehovot-ads/rehovot-ads-packages/android/src/main/AndroidManifest.xml:4:5-79
+8-->/Volumes/T7/Work/Office/plugins/rehovot-ads/rehovot-ads-packages/android/src/main/AndroidManifest.xml:4:22-76
+9
+10</manifest>

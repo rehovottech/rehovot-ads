@@ -20,6 +20,7 @@ public class CapacitorAdsPlugin: CAPPlugin, CAPBridgedPlugin, AdsEventSink {
         CAPPluginMethod(name: "showRewarded", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "setConsent", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "requestTracking", returnType: CAPPluginReturnPromise),
+        CAPPluginMethod(name: "openTestSuite", returnType: CAPPluginReturnPromise),
         CAPPluginMethod(name: "destroy", returnType: CAPPluginReturnPromise),
     ]
 
@@ -65,7 +66,7 @@ public class CapacitorAdsPlugin: CAPPlugin, CAPBridgedPlugin, AdsEventSink {
         }
         let request = BannerRequest(placementId: placementId, position: call.getString("position"))
         DispatchQueue.main.async {
-            self.ads.banner.show(request, placementId: placementId, in: self.bridge?.viewController?.view)
+            self.ads.banner.show(request, placementId: placementId, from: self.bridge?.viewController)
             call.resolve()
         }
     }
@@ -182,6 +183,13 @@ public class CapacitorAdsPlugin: CAPPlugin, CAPBridgedPlugin, AdsEventSink {
                 }
                 call.resolve(["status": value])
             }
+        }
+    }
+
+    @objc func openTestSuite(_ call: CAPPluginCall) {
+        DispatchQueue.main.async {
+            self.ads.openTestSuite(from: self.bridge?.viewController)
+            call.resolve()
         }
     }
 

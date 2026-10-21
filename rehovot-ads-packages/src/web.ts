@@ -69,5 +69,7 @@ export class CapacitorAdsWeb extends WebPlugin implements CapacitorAdsPlugin {
     return { status: "unavailable" };
   }
 
+  public async openTestSuite(): Promise<void> {}
+
   public async destroy(): Promise<void> {}
 }

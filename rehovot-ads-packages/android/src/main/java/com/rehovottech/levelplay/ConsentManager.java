@@ -1,13 +1,11 @@
 package com.rehovottech.levelplay;
 
-import android.content.Context;
-import com.unity3d.ads.metadata.MetaData;
+import com.unity3d.mediation.LevelPlayPrivacySettings;
 
 /**
- * Privacy choices are forwarded to the Unity Ads SDK as metadata
- * (gdpr.consent, privacy.consent, user.nonbehavioral).
+ * Privacy choices go to LevelPlay, which forwards them to every mediated network.
+ * Set them before initialize(); later calls apply to the next ad requests.
  */
-@SuppressWarnings("deprecation")
 final class ConsentManager {
     private final Logger logger;
 
@@ -15,17 +13,11 @@ final class ConsentManager {
         this.logger = logger;
     }
 
-    void setConsent(Context context, UnityEvents.ConsentRequest request) {
+    void setConsent(UnityEvents.ConsentRequest request) {
         logger.debug("setConsent " + request);
-        if (request.gdprConsent != null) commit(context, "gdpr.consent", request.gdprConsent);
-        // Unity expects "privacy.consent" = true when the user ALLOWS the sale of data.
-        if (request.doNotSell != null) commit(context, "privacy.consent", !request.doNotSell);
-        if (request.childDirected != null) commit(context, "user.nonbehavioral", request.childDirected);
-    }
-
-    private void commit(Context context, String key, boolean value) {
-        MetaData metaData = new MetaData(context);
-        metaData.set(key, value);
-        metaData.commit();
+        if (request.gdprConsent != null) LevelPlayPrivacySettings.setGDPRConsent(request.gdprConsent);
+        // CCPA: true = the user opted OUT of the sale of personal data.
+        if (request.doNotSell != null) LevelPlayPrivacySettings.setCCPA(request.doNotSell);
+        if (request.childDirected != null) LevelPlayPrivacySettings.setCOPPA(request.childDirected);
     }
 }

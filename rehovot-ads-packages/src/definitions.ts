@@ -13,16 +13,19 @@ export interface AdsPlacements {
 export interface AdsInitializeOptions {
   /**
    * SDK app identifier for the current platform.
-   * Unity Ads backend: the Unity **Game ID** (Unity Dashboard > Monetization > Ad units).
+   * Unity LevelPlay backend: the **App Key** (LevelPlay > Apps).
    */
   readonly appKey?: string;
-  /** Serve test ads only. Keep true until the store build is approved. */
+  /**
+   * Enables the LevelPlay Test Suite (openTestSuite) and is the switch to keep on until the store build
+   * is approved. Test ads come from registering the device in LevelPlay > Setup > Test devices.
+   */
   readonly testMode?: boolean;
   /** Verbose native logging. */
   readonly debug?: boolean;
   /** Preload interstitial + rewarded after init and reload after each show. Default true. */
   readonly autoStart?: boolean;
-  /** Default ad units for this platform. */
+  /** Default LevelPlay ad unit ids for this platform. */
   readonly placements?: AdsPlacements;
   readonly metadata?: Readonly<Record<string, AdsMetadataValue>>;
 }
@@ -105,6 +108,9 @@ export interface CapacitorAdsPlugin {
   setConsent(options: ConsentOptions): Promise<void>;
   /** iOS 14+: Apple's App Tracking Transparency prompt. Other platforms resolve "unavailable". */
   requestTracking(): Promise<{ status: TrackingStatus }>;
+
+  /** Opens the LevelPlay Test Suite (needs testMode: true at initialize). Shows which network adapters are integrated. */
+  openTestSuite(): Promise<void>;
 
   destroy(): Promise<void>;
 
