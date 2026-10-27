@@ -5,7 +5,7 @@
     targetSdkVersion="36.0"
     mergedManifest="build/intermediates/merged_manifest/release/processReleaseManifest/AndroidManifest.xml"
     manifestMergeReport="build/outputs/logs/manifest-merger-release-report.txt"
-    proguardFiles="build/intermediates/default_proguard_files/global/proguard-android-optimize.txt-9.2.1"
+    proguardFiles="build/intermediates/default_proguard_files/global/proguard-android-optimize.txt-9.4.1"
     consumerProguardFiles="proguard-rules.pro"
     partialResultsDir="build/intermediates/lint_vital_partial_results/release/lintVitalAnalyzeRelease/out">
   <buildFeatures/>
@@ -28,6 +28,6 @@
       applicationId="com.rehovottech.capacitorads"
       generatedSourceFolders="build/generated/ap_generated_sources/release/out"
       generatedResourceFolders="build/generated/res/resValues/release"
-      desugaredMethodsFiles="/Users/simeonaron/.gradle/caches/9.4.1/transforms/b477b4063bafa2fa363192393261afe4/transformed/D8BackportedDesugaredMethods.txt">
+      desugaredMethodsFiles="/Users/simeonaron/.gradle/caches/9.6.0/transforms/96ff2977466ce34a49c166c4ea589cb5/transformed/D8BackportedDesugaredMethods.txt">
   </artifact>
 </variant>

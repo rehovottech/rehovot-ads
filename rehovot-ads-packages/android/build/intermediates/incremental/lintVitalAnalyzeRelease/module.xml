@@ -4,7 +4,7 @@
     name=":rehovottech-capacitor-ads"
     type="LIBRARY"
     maven="android:rehovottech-capacitor-ads:unspecified"
-    agpVersion="9.2.1"
+    agpVersion="9.4.1"
     buildFolder="build"
     bootClassPath="/Users/simeonaron/Library/Android/sdk/platforms/android-36/android.jar:/Users/simeonaron/Library/Android/sdk/build-tools/36.0.0/core-lambda-stubs.jar"
     javaSourceLevel="21"

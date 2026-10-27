@@ -14,18 +14,20 @@ export interface AdsInitializeOptions {
   /**
    * SDK app identifier for the current platform.
    * Unity LevelPlay backend: the **App Key** (LevelPlay > Apps).
+   * Web (H5 Games Ads) backend: the AdSense **publisher id** ("ca-pub-…"). Without one, web ads stay off.
    */
   readonly appKey?: string;
   /**
    * Enables the LevelPlay Test Suite (openTestSuite) and is the switch to keep on until the store build
    * is approved. Test ads come from registering the device in LevelPlay > Setup > Test devices.
+   * Web: Google's H5 test ads (data-adbreak-test="on"), no revenue; keep it on until the site is approved.
    */
   readonly testMode?: boolean;
   /** Verbose native logging. */
   readonly debug?: boolean;
   /** Preload interstitial + rewarded after init and reload after each show. Default true. */
   readonly autoStart?: boolean;
-  /** Default LevelPlay ad unit ids for this platform. */
+  /** Default LevelPlay ad unit ids for this platform (web: adBreak() names, reporting labels only). */
   readonly placements?: AdsPlacements;
   readonly metadata?: Readonly<Record<string, AdsMetadataValue>>;
 }
