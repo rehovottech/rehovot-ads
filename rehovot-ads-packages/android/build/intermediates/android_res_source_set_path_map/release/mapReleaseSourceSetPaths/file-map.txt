@@ -7,4 +7,4 @@ com.rehovottech.capacitorads.rehovottech-capacitor-ads-release-5 /Volumes/T7/Wor
 com.rehovottech.capacitorads.rehovottech-capacitor-ads-release-6 /Volumes/T7/Work/Office/plugins/rehovot-ads/rehovot-ads-packages/android/build/intermediates/packaged_res/release/packageReleaseResources
 com.rehovottech.capacitorads.rehovottech-capacitor-ads-main-7 /Volumes/T7/Work/Office/plugins/rehovot-ads/rehovot-ads-packages/android/src/main/res
 com.rehovottech.capacitorads.rehovottech-capacitor-ads-release-8 /Volumes/T7/Work/Office/plugins/rehovot-ads/rehovot-ads-packages/android/src/release/res
-gradleHome-0 /Users/simeonaron/.gradle
+gradleHome-0 /Users/rehovot/.gradle
